@@ -8,7 +8,11 @@ import categoriesRoutes from "./routes/CategoriasRoutes.js";
 connectDB();
 
 const app = express();
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ecommerce-mern-8vyn.onrender.com",
+  "https://ecommerce-mern-theta-six.vercel.app/",
+];
 
 app.use(
   cors({
