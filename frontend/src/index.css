@@ -1,1 +1,61 @@
 @import "tailwindcss";
+
+@keyframes slideIn {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.25s ease-out;
+}
+
+.animate-fadeOut {
+  animation: fadeOut 0.2s ease-in;
+}
+
+@keyframes toast-slide-in {
+  from {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toast-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+[data-state="open"] {
+  animation: toast-slide-in 0.25s ease-out forwards;
+}
+
+[data-state="closed"] {
+  animation: toast-fade-out 0.2s ease-in forwards;
+}

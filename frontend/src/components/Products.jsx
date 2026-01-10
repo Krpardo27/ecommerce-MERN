@@ -1,13 +1,23 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
 import Sidebar from "../components/Sidebar";
 import { useProductos } from "../hooks/useProductos";
+import { useLoading } from "../hooks/useLoading";
+import { useCartContext } from "../hooks/useCart";
+import { useToast } from "../hooks/useToast";
+
+import ProductCard from "./ProductCard";
+import SidebarMobile from "./SidebarMobile";
+import ProductCardSkeleton from "./ProductCardSkeleton";
+
 
 const Products = () => {
   const { productos, loading, error } = useProductos();
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(12);
+  const { addToCart } = useCartContext();
+  const { showToast } = useToast();
 
   const productosFiltrados = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -30,9 +40,32 @@ const Products = () => {
       : productosFiltrados.slice(0, limit);
   }, [productosFiltrados, limit]);
 
-  if (loading) {
-    return <div className="p-6 text-zinc-400">Cargando productos…</div>;
-  }
+  const { showLoader, hideLoader } = useLoading();
+
+  const handleAddToCart = (producto) => {
+    addToCart(producto);
+
+    showToast({
+      title: "Añadido al carrito",
+      description: producto.nombre,
+    });
+  };
+
+  useEffect(() => {
+    if (loading) {
+      showLoader();
+    } else {
+      hideLoader();
+    }
+  }, [loading, showLoader, hideLoader]);
+
+  useEffect(() => {
+    if (categoriaActiva !== null) {
+      showLoader();
+      const t = setTimeout(hideLoader, 300);
+      return () => clearTimeout(t);
+    }
+  }, [categoriaActiva, showLoader, hideLoader]);
 
   if (error) {
     return <div className="p-6 text-red-500">{error}</div>;
@@ -110,47 +143,35 @@ const Products = () => {
           </div>
         </section>
 
+        <div className="md:hidden">
+          <SidebarMobile
+            categoriaActiva={categoriaActiva}
+            onChangeCategoria={setCategoriaActiva}
+          />
+        </div>
+
         <section
           className="
-            grid gap-6
-            grid-cols-1
-            sm:grid-cols-2
-            lg:grid-cols-3
-            xl:grid-cols-4
-          "
+    grid gap-6
+    grid-cols-1
+    sm:grid-cols-2
+    lg:grid-cols-3
+    xl:grid-cols-4
+  "
         >
-          {productosVisibles.map((p) => (
-            <article
-              key={p._id}
-              className="group relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden"
-            >
-              <div className="relative h-52 overflow-hidden">
-                <img
-                  src={p.imagenes?.[0]}
-                  alt={p.nombre}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          {loading
+            ? Array.from({ length: limit === "all" ? 12 : limit }).map(
+                (_, i) => <ProductCardSkeleton key={i} />
+              )
+            : productosVisibles.map((p) => (
+                <ProductCard
+                  key={p._id}
+                  producto={p}
+                  onAddToCart={handleAddToCart}
                 />
-
-                <div className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur text-xs font-semibold px-3 py-1 rounded-full text-lime-400">
-                  ${p.precio.toLocaleString("es-CL")}
-                </div>
-              </div>
-
-              <div className="p-4 space-y-2">
-                <h3 className="text-sm font-medium text-zinc-100 line-clamp-2">
-                  {p.nombre}
-                </h3>
-
-                <p className="text-xs uppercase tracking-wide text-zinc-500">
-                  {p.categoria?.nombre}
-                </p>
-              </div>
-            </article>
-          ))}
+              ))}
         </section>
 
-        {/* EMPTY */}
         {productosVisibles.length === 0 && (
           <section className="text-sm text-zinc-500">
             No se encontraron productos.
