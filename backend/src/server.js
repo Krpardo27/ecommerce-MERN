@@ -11,25 +11,35 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "https://ecommerce-mern-8vyn.onrender.com",
-  "https://ecommerce-mern-theta-six.vercel.app/",
+  "https://ecommerce-mern-theta-six.vercel.app",
 ];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      console.log("🌐 Origin recibido:", origin);
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        console.error("❌ No permitido por CORS:", origin);
-        callback(new Error("No permitido por CORS"));
-      }
-    },
+const corsOptions = {
+  origin: (origin, callback) => {
+    console.log("🌐 Origin recibido:", origin);
 
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-  })
-);
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    if (origin.endsWith(".vercel.app")) {
+      return callback(null, true);
+    }
+
+    console.error("❌ No permitido por CORS:", origin);
+    return callback(new Error("No permitido por CORS"));
+  },
+
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
