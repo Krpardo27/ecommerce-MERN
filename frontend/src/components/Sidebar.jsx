@@ -16,34 +16,10 @@ const iconBySlug = {
   miscellaneous: FiBox,
 };
 
-const Sidebar = ({ categoriaActiva, onChangeCategoria }) => {
-  const { categorias, loading } = useProductos();
-
-  if (loading) {
-    return (
-      <aside className="w-64 p-6 text-zinc-400">Cargando categorías…</aside>
-    );
-  }
-
+const SidebarContent = ({ categorias, categoriaActiva, onChangeCategoria }) => {
   return (
-    <aside
-      className="
-        w-64 shrink-0
-        border-r border-zinc-800
-        bg-zinc-950
-        p-6
-        sticky top-16
-        h-[calc(100vh-4rem)]
-      "
-    >
-      <h2
-        className="
-          text-xs font-semibold
-          uppercase tracking-widest
-          text-zinc-500
-          mb-6
-        "
-      >
+    <>
+      <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-6">
         Categorías
       </h2>
 
@@ -51,42 +27,32 @@ const Sidebar = ({ categoriaActiva, onChangeCategoria }) => {
         <li>
           <button
             onClick={() => onChangeCategoria(null)}
-            className={`
-        group w-full flex items-center gap-3
-        px-3 py-2 rounded-lg text-sm
-        transition
-        ${
-          categoriaActiva === null
-            ? "bg-zinc-800 text-lime-400"
-            : "text-zinc-300 hover:bg-zinc-900 hover:text-zinc-100"
-        }
-      `}
+            className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${
+              categoriaActiva === null
+                ? "bg-zinc-800 text-lime-400"
+                : "text-zinc-300 hover:bg-zinc-900"
+            }`}
           >
-            <FiGrid className="text-base opacity-80" />
-            <span>Todas</span>
+            <FiGrid />
+            Todas
           </button>
         </li>
 
-        {categorias.map((categoria) => {
-          const Icon = iconBySlug[categoria.slug] || FiBox;
+        {categorias.map((c) => {
+          const Icon = iconBySlug[c.slug] || FiBox;
 
           return (
-            <li key={categoria._id}>
+            <li key={c._id}>
               <button
-                onClick={() => onChangeCategoria(categoria.slug)}
-                className={`
-            group w-full flex items-center gap-3
-            px-3 py-2 rounded-lg text-sm capitalize
-            transition
-            ${
-              categoriaActiva === categoria.slug
-                ? "bg-zinc-800 text-lime-400"
-                : "text-zinc-300 hover:bg-zinc-900 hover:text-zinc-100"
-            }
-          `}
+                onClick={() => onChangeCategoria(c.slug)}
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition capitalize ${
+                  categoriaActiva === c.slug
+                    ? "bg-zinc-800 text-lime-400"
+                    : "text-zinc-300 hover:bg-zinc-900"
+                }`}
               >
-                <Icon className="text-base opacity-80" />
-                <span>{categoria.nombre}</span>
+                <Icon />
+                {c.nombre}
               </button>
             </li>
           );
@@ -94,12 +60,31 @@ const Sidebar = ({ categoriaActiva, onChangeCategoria }) => {
       </ul>
 
       <div className="mt-10 pt-6 border-t border-zinc-800">
-        <p className="text-xs text-zinc-500 leading-relaxed">
+        <p className="text-xs text-zinc-500">
           Urban essentials · curated drops
         </p>
       </div>
+    </>
+  );
+};
+
+const Sidebar = ({ categoriaActiva, onChangeCategoria }) => {
+  const { categorias, loading } = useProductos();
+
+  if (loading) {
+    return <aside className="w-64 p-6 text-zinc-400">Cargando…</aside>;
+  }
+
+  return (
+    <aside className="hidden md:block w-64 shrink-0 border-r border-zinc-800 bg-zinc-950 p-6 sticky top-16 h-[calc(100vh-4rem)]">
+      <SidebarContent
+        categorias={categorias}
+        categoriaActiva={categoriaActiva}
+        onChangeCategoria={onChangeCategoria}
+      />
     </aside>
   );
 };
 
 export default Sidebar;
+export { SidebarContent };
