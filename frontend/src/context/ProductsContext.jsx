@@ -3,12 +3,10 @@ import axios from "axios";
 
 export const ProductosContext = createContext(null);
 
-const API_URL = import.meta.env.VITE_API_URL;
-
 export const ProductosProvider = ({ children }) => {
   const [productos, setProductos] = useState([]);
-  console.log('produtos desde CONTEXT', productos);
-  
+  console.log("produtos desde CONTEXT", productos);
+
   const [categorias, setCategorias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,7 +18,9 @@ export const ProductosProvider = ({ children }) => {
       try {
         setLoading(true);
 
-        const { data } = await axios.get(`${API_URL}/products`);
+        const { data } = await axios.get(
+          `${import.meta.env.VITE_API_URL}/products`
+        );
         if (!isMounted) return;
 
         setProductos(data);
