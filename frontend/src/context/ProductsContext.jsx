@@ -19,7 +19,7 @@ export const ProductosProvider = ({ children }) => {
         setLoading(true);
 
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/products`
+          `${import.meta.env.VITE_API_URL}/api/products`
         );
         if (!isMounted) return;
 
