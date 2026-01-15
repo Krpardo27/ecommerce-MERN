@@ -1,19 +1,19 @@
 import {
   FiGrid,
-  FiShoppingBag,
+  FiMousePointer,
   FiCpu,
-  FiHome,
-  FiWatch,
+  FiHeadphones,
+  FiVideo,
   FiBox,
 } from "react-icons/fi";
 import { useProductos } from "../hooks/useProductos";
 
 const iconBySlug = {
-  moda: FiShoppingBag,
-  electronics: FiCpu,
-  furniture: FiHome,
-  shoes: FiWatch,
-  miscellaneous: FiBox,
+  perifericos: FiMousePointer,
+  "componentes-pc": FiCpu,
+  "audio-gamer": FiHeadphones,
+  streaming: FiVideo,
+  "sillas-gamer": FiBox,
 };
 
 const SidebarContent = ({ categorias, categoriaActiva, onChangeCategoria }) => {

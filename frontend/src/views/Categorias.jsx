@@ -1,11 +1,9 @@
-import React from "react";
-import Sidebar from "../components/Sidebar";
-import Products from "../components/Products";
+import ProductsView from "../components/Products/PRoductsView";
 
 const Categorias = () => {
   return (
-    <section>
-      <Products />
+    <section className="min-h-screen">
+      <ProductsView />
     </section>
   );
 };

@@ -7,6 +7,6 @@ import {
 const router = Router();
 
 router.get("/", obtenerProductos);
-router.get("/:slug", obtenerProductoPorSlug);
+router.get("/slug/:slug", obtenerProductoPorSlug);
 
 export default router;

@@ -9,10 +9,10 @@ import { useToast } from "../hooks/useToast";
 import ProductCard from "./ProductCard";
 import SidebarMobile from "./SidebarMobile";
 import ProductCardSkeleton from "./ProductCardSkeleton";
-
+import Paginator from "./Paginator";
 
 const Products = () => {
-  const { productos, loading, error } = useProductos();
+  const { productos, loading, error, totalProductos } = useProductos();
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(12);
@@ -78,7 +78,6 @@ const Products = () => {
         categoriaActiva={categoriaActiva}
         onChangeCategoria={setCategoriaActiva}
       />
-
       <main className="flex-1 p-6 space-y-8">
         {/* CONTROLES */}
         <section className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

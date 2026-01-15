@@ -6,15 +6,30 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./router";
 import { CartProvider } from "./context/CartContext";
 import { LoadingProvider } from "./context/LoadingContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutos
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <LoadingProvider>
-      <CartProvider>
-        <ProductosProvider>
-          <RouterProvider router={router} />
-        </ProductosProvider>
-      </CartProvider>
-    </LoadingProvider>
+    <QueryClientProvider client={queryClient}>
+      <LoadingProvider>
+        <CartProvider>
+          <ProductosProvider>
+            <RouterProvider router={router} />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </ProductosProvider>
+        </CartProvider>
+      </LoadingProvider>
+    </QueryClientProvider>
   </StrictMode>
 );

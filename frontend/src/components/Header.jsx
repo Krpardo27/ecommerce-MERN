@@ -83,14 +83,17 @@ const Header = () => {
 
           {/* DESKTOP NAV */}
           <nav className="hidden md:flex items-center gap-2">
-            <NavItem to="/" label="Productos" />
+            <NavItem to="/" label="Home" />
+            <NavItem to="/nosotros" label="Nosotros" />
+            <NavItem to="/productos" label="Productos" />
             <NavItem to="/categorias" label="Categorías" />
-            <NavItem
-              to="/carrito"
-              label="Carrito 🛒"
-              badge={totalItems}
-            />
+            <NavItem to="/blog" label="Blog" />
+            <NavItem to="/contacto" label="Contacto" />
           </nav>
+ 
+          <div>
+            <NavItem to="/carrito" label="Carrito 🛒" badge={totalItems} />
+          </div>
 
           {/* MOBILE BUTTON */}
           <button
@@ -138,10 +141,7 @@ const Header = () => {
             {/* HEADER DRAWER */}
             <div className="flex items-center justify-between mb-6">
               <span className="text-lg font-semibold">Menú</span>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Cerrar menú"
-              >
+              <button onClick={() => setOpen(false)} aria-label="Cerrar menú">
                 <FiX className="text-xl" />
               </button>
             </div>
@@ -156,12 +156,6 @@ const Header = () => {
               <NavItem
                 to="/categorias"
                 label="Categorías"
-                onClick={() => setOpen(false)}
-              />
-              <NavItem
-                to="/carrito"
-                label="Carrito 🛒"
-                badge={totalItems}
                 onClick={() => setOpen(false)}
               />
             </nav>

@@ -1,191 +1,194 @@
+// ===============================
+// CATEGORÍAS GAMER
+// ===============================
+
 export const categories = [
   {
-    key: "ropa",
-    nombre: "Ropa",
-    slug: "ropa",
-    imagen: "https://i.imgur.com/QkIa5tT.jpeg",
+    key: "perifericos",
+    nombre: "Periféricos",
+    slug: "perifericos",
+    imagen:
+      "https://images.pexels.com/photos/1036641/pexels-photo-1036641.jpeg",
   },
   {
-    key: "deportivo",
-    nombre: "Deportivo",
-    slug: "deportivo",
-    imagen: "https://i.imgur.com/ZKGofuB.jpeg",
+    key: "componentes-pc",
+    nombre: "Componentes PC",
+    slug: "componentes-pc",
+    imagen: "https://images.pexels.com/photos/258859/pexels-photo-258859.jpeg",
   },
   {
-    key: "calzado",
-    nombre: "Calzado",
-    slug: "calzado",
-    imagen: "https://i.imgur.com/R3iobJA.jpeg",
+    key: "audio-gamer",
+    nombre: "Audio Gamer",
+    slug: "audio-gamer",
+    imagen:
+      "https://images.pexels.com/photos/159526/headphones-headset-earpads-listen-159526.jpeg",
   },
   {
-    key: "accesorios",
-    nombre: "Accesorios",
-    slug: "accesorios",
-    imagen: "https://i.imgur.com/76HAxcA.jpeg",
+    key: "sillas-gamer",
+    nombre: "Sillas Gamer",
+    slug: "sillas-gamer",
+    imagen:
+      "https://images.pexels.com/photos/4489732/pexels-photo-4489732.jpeg",
   },
   {
-    key: "invierno",
-    nombre: "Invierno",
-    slug: "invierno",
-    imagen: "https://i.imgur.com/R2PN9Wq.jpeg",
+    key: "streaming",
+    nombre: "Streaming",
+    slug: "streaming",
+    imagen:
+      "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg",
   },
 ];
 
+// ===============================
+// PRODUCTOS GAMER
+// ===============================
+
 export const products = [
-  // ───────────── ROPA ─────────────
+  // ───────────── PERIFÉRICOS ─────────────
   {
-    nombre: "Polerón Gris Básico",
-    slug: "poleron-gris-basico",
-    precio: 27.990,
+    nombre: "Mouse Gamer RGB 16000 DPI",
+    slug: "mouse-gamer-rgb-16000dpi",
+    precio: 34990,
     descripcion:
-      "Polerón de algodón con interior afelpado. Ideal para uso diario.",
-    categoriaKey: "ropa",
-    imagenes: ["https://i.imgur.com/cHddUCu.jpeg"],
+      "Mouse gamer con sensor óptico de alta precisión, 16000 DPI y RGB personalizable.",
+    categoriaKey: "perifericos",
+    imagenes: [
+      "https://images.pexels.com/photos/820521/pexels-photo-820521.jpeg",
+    ],
     activo: true,
   },
   {
-    nombre: "Polera Blanca Algodón",
-    slug: "polera-blanca-algodon",
-    precio: 9.990,
-    descripcion: "Polera blanca clásica, algodón suave, corte regular.",
-    categoriaKey: "ropa",
-    imagenes: ["https://i.imgur.com/QkIa5tT.jpeg"],
-    activo: true,
-  },
-  {
-    nombre: "Camisa Cuadrillé Roja",
-    slug: "camisa-cuadrille-roja",
-    precio: 18.990,
+    nombre: "Teclado Mecánico Switch Blue",
+    slug: "teclado-mecanico-switch-blue",
+    precio: 79990,
     descripcion:
-      "Camisa manga larga estilo leñador, ideal para media estación.",
-    categoriaKey: "ropa",
-    imagenes: ["https://i.imgur.com/UlxxXyG.jpeg"],
+      "Teclado mecánico gamer con switches azules y retroiluminación RGB.",
+    categoriaKey: "perifericos",
+    imagenes: [
+      "https://images.pexels.com/photos/845518/pexels-photo-845518.jpeg",
+    ],
     activo: true,
   },
   {
-    nombre: "Chaqueta Denim Azul",
-    slug: "chaqueta-denim-azul",
-    precio: 44.990,
-    descripcion: "Chaqueta de mezclilla clásica, resistente y versátil.",
-    categoriaKey: "ropa",
-    imagenes: ["https://i.imgur.com/IvxMPFr.jpeg"],
+    nombre: "Mousepad XL Antideslizante",
+    slug: "mousepad-xl-antideslizante",
+    precio: 14990,
+    descripcion: "Mousepad gamer tamaño XL con base antideslizante.",
+    categoriaKey: "perifericos",
+    imagenes: [
+      "https://images.pexels.com/photos/1036641/pexels-photo-1036641.jpeg",
+    ],
     activo: true,
   },
 
-  // ───────────── DEPORTIVO ─────────────
+  // ───────────── COMPONENTES PC ─────────────
   {
-    nombre: "Jogger Deportivo Negro",
-    slug: "jogger-deportivo-negro",
-    precio: 22.990,
+    nombre: "Memoria RAM DDR5 32GB 6000MHz",
+    slug: "ram-ddr5-32gb-6000mhz",
+    precio: 189990,
     descripcion:
-      "Jogger liviano con ajuste elástico, ideal para entrenamiento.",
-    categoriaKey: "deportivo",
-    imagenes: ["https://i.imgur.com/ZKGofuB.jpeg"],
+      "Memoria RAM DDR5 de alto rendimiento para gaming y creación de contenido.",
+    categoriaKey: "componentes-pc",
+    imagenes: [
+      "https://images.pexels.com/photos/442583/pexels-photo-442583.jpeg",
+    ],
     activo: true,
   },
   {
-    nombre: "Short Deportivo Azul",
-    slug: "short-deportivo-azul",
-    precio: 14.990,
-    descripcion: "Short deportivo transpirable, ideal para running.",
-    categoriaKey: "deportivo",
-    imagenes: ["https://i.imgur.com/GJi73H0.jpeg"],
+    nombre: "SSD NVMe Gen4 1TB",
+    slug: "ssd-nvme-gen4-1tb",
+    precio: 119990,
+    descripcion: "Unidad SSD NVMe Gen4 con velocidades ultra rápidas.",
+    categoriaKey: "componentes-pc",
+    imagenes: [
+      "https://images.pexels.com/photos/270360/pexels-photo-270360.jpeg",
+    ],
     activo: true,
   },
   {
-    nombre: "Polera Dry Fit Negra",
-    slug: "polera-dry-fit-negra",
-    precio: 12.990,
-    descripcion: "Polera deportiva de secado rápido.",
-    categoriaKey: "deportivo",
-    imagenes: ["https://i.imgur.com/633Fqrz.jpeg"],
-    activo: true,
-  },
-
-  // ───────────── CALZADO ─────────────
-  {
-    nombre: "Zapatillas Urbanas Negras",
-    slug: "zapatillas-urbanas-negras",
-    precio: 54.990,
-    descripcion: "Zapatillas urbanas cómodas para uso diario.",
-    categoriaKey: "calzado",
-    imagenes: ["https://i.imgur.com/R3iobJA.jpeg"],
-    activo: true,
-  },
-  {
-    nombre: "Zapatillas Running Gris",
-    slug: "zapatillas-running-gris",
-    precio: 69.990,
-    descripcion: "Zapatillas ligeras diseñadas para running.",
-    categoriaKey: "calzado",
-    imagenes: ["https://i.imgur.com/wXuQ7bm.jpeg"],
-    activo: true,
-  },
-  {
-    nombre: "Botines de Cuero Café",
-    slug: "botines-cuero-cafe",
-    precio: 79.990,
-    descripcion: "Botines de cuero natural, elegantes y resistentes.",
-    categoriaKey: "calzado",
-    imagenes: ["https://i.imgur.com/BZrIEmb.jpeg"],
+    nombre: "Fuente de Poder 850W 80+ Gold",
+    slug: "fuente-poder-850w-gold",
+    precio: 139990,
+    descripcion: "Fuente de poder certificada 80+ Gold, ideal para PCs gamer.",
+    categoriaKey: "componentes-pc",
+    imagenes: [
+      "https://images.pexels.com/photos/258859/pexels-photo-258859.jpeg",
+    ],
     activo: true,
   },
 
-  // ───────────── ACCESORIOS ─────────────
+  // ───────────── AUDIO GAMER ─────────────
   {
-    nombre: "Gorro Lana Invierno",
-    slug: "gorro-lana-invierno",
-    precio: 7.990,
-    descripcion: "Gorro tejido ideal para días fríos.",
-    categoriaKey: "accesorios",
-    imagenes: ["https://i.imgur.com/76HAxcA.jpeg"],
+    nombre: "Audífonos Gamer 7.1 Surround",
+    slug: "audifonos-gamer-7-1",
+    precio: 69990,
+    descripcion:
+      "Audífonos gamer con sonido envolvente 7.1 y micrófono desmontable.",
+    categoriaKey: "audio-gamer",
+    imagenes: [
+      "https://images.pexels.com/photos/159526/headphones-headset-earpads-listen-159526.jpeg",
+    ],
     activo: true,
   },
   {
-    nombre: "Mochila Urbana Negra",
-    slug: "mochila-urbana-negra",
-    precio: 34.990,
-    descripcion: "Mochila urbana con compartimento para notebook.",
-    categoriaKey: "accesorios",
-    imagenes: ["https://i.imgur.com/Wv2KTsf.jpeg"],
-    activo: true,
-  },
-  {
-    nombre: "Cinturón Cuero Negro",
-    slug: "cinturon-cuero-negro",
-    precio: 15.990,
-    descripcion: "Cinturón de cuero legítimo.",
-    categoriaKey: "accesorios",
-    imagenes: ["https://i.imgur.com/KcT6BE0.jpeg"],
+    nombre: "Headset Gamer Wireless",
+    slug: "headset-gamer-wireless",
+    precio: 89990,
+    descripcion:
+      "Headset inalámbrico gamer con baja latencia y gran autonomía.",
+    categoriaKey: "audio-gamer",
+    imagenes: [
+      "https://images.pexels.com/photos/704264/pexels-photo-704264.jpeg",
+    ],
     activo: true,
   },
 
-  // ───────────── INVIERNO ─────────────
+  // ───────────── SILLAS GAMER ─────────────
   {
-    nombre: "Parka Acolchada Negra",
-    slug: "parka-acolchada-negra",
-    precio: 89.990,
-    descripcion: "Parka térmica ideal para bajas temperaturas.",
-    categoriaKey: "invierno",
-    imagenes: ["https://i.imgur.com/R2PN9Wq.jpeg"],
+    nombre: "Silla Gamer Ergonómica Pro",
+    slug: "silla-gamer-ergonomica-pro",
+    precio: 249990,
+    descripcion:
+      "Silla gamer con soporte lumbar, apoyabrazos ajustables y reclinación 180°.",
+    categoriaKey: "sillas-gamer",
+    imagenes: [
+      "https://images.pexels.com/photos/4489732/pexels-photo-4489732.jpeg",
+    ],
     activo: true,
   },
   {
-    nombre: "Bufanda Lana Gris",
-    slug: "bufanda-lana-gris",
-    precio: 10.990,
-    descripcion: "Bufanda suave de lana sintética.",
-    categoriaKey: "invierno",
-    imagenes: ["https://i.imgur.com/cSytoSD.jpeg"],
+    nombre: "Silla Gamer Compact",
+    slug: "silla-gamer-compact",
+    precio: 179990,
+    descripcion: "Silla gamer compacta, ideal para escritorios pequeños.",
+    categoriaKey: "sillas-gamer",
+    imagenes: [
+      "https://images.pexels.com/photos/9117385/pexels-photo-9117385.jpeg",
+    ],
+    activo: true,
+  },
+
+  // ───────────── STREAMING ─────────────
+  {
+    nombre: "Micrófono Condensador USB",
+    slug: "microfono-condensador-usb",
+    precio: 89990,
+    descripcion: "Micrófono condensador USB ideal para streaming y podcast.",
+    categoriaKey: "streaming",
+    imagenes: [
+      "https://images.pexels.com/photos/1105666/pexels-photo-1105666.jpeg",
+    ],
     activo: true,
   },
   {
-    nombre: "Guantes Térmicos Negros",
-    slug: "guantes-termicos-negros",
-    precio: 8.990,
-    descripcion: "Guantes térmicos para frío intenso.",
-    categoriaKey: "invierno",
-    imagenes: ["https://i.imgur.com/WwKucXb.jpeg"],
+    nombre: "Webcam Full HD 60FPS",
+    slug: "webcam-full-hd-60fps",
+    precio: 59990,
+    descripcion: "Webcam Full HD 1080p a 60FPS para streaming profesional.",
+    categoriaKey: "streaming",
+    imagenes: [
+      "https://images.pexels.com/photos/3815588/pexels-photo-3815588.jpeg",
+    ],
     activo: true,
   },
 ];
