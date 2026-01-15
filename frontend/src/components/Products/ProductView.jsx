@@ -9,7 +9,7 @@ import Paginator from "../Paginator";
 import ProductsGrid from "./ProductsGrid";
 import Sidebar from "../Sidebar";
 
-const ProductsView = () => {
+const ProductView = () => {
   const { productos, loading, error } = useProductos();
   const { showLoader, hideLoader } = useLoading();
 
@@ -32,9 +32,7 @@ const ProductsView = () => {
         ? p?.categoria?.slug === categoria
         : true;
 
-      const matchSearch = q
-        ? p?.nombre?.toLowerCase().includes(q)
-        : true;
+      const matchSearch = q ? p?.nombre?.toLowerCase().includes(q) : true;
 
       return matchCategoria && matchSearch;
     });
@@ -43,9 +41,7 @@ const ProductsView = () => {
   const itemsPerPage =
     limit === "all" ? productosFiltrados.length : Number(limit);
 
-  const totalPages = Math.ceil(
-    productosFiltrados.length / itemsPerPage
-  );
+  const totalPages = Math.ceil(productosFiltrados.length / itemsPerPage);
 
   const productosVisibles = useMemo(() => {
     if (limit === "all") return productosFiltrados;
@@ -73,11 +69,8 @@ const ProductsView = () => {
     <div className="flex bg-zinc-950 min-h-screen">
       <Sidebar
         categoriaActiva={categoria}
-        onChangeCategoria={(slug) =>
-          updateParams({ categoria: slug, page: 1 })
-        }
+        onChangeCategoria={(slug) => updateParams({ categoria: slug, page: 1 })}
       />
-
       <main className="flex-1 p-6 space-y-8">
         <ProductsControls
           search={search}
@@ -87,7 +80,6 @@ const ProductsView = () => {
           onSearch={(v) => updateParams({ search: v, page: 1 })}
           onLimit={(v) => updateParams({ limit: v, page: 1 })}
         />
-
         <div className="md:hidden">
           <SidebarMobile
             categoriaActiva={categoria}
@@ -96,17 +88,12 @@ const ProductsView = () => {
             }
           />
         </div>
-
         <ProductsGrid
           loading={loading}
           productos={productosVisibles}
           limit={limit}
         />
-
-        {!loading && productosVisibles.length === 0 && (
-          <ProductsEmpty />
-        )}
-
+        {!loading && productosVisibles.length === 0 && <ProductsEmpty />}
         <Paginator
           page={page}
           totalPages={totalPages}
@@ -117,4 +104,4 @@ const ProductsView = () => {
   );
 };
 
-export default ProductsView;
+export default ProductView;
