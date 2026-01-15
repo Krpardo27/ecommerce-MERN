@@ -1,9 +1,9 @@
-import ProductsView from "../components/Products/PRoductsView";
+import ProductView from "../components/Products/ProductView";
 
 const Categorias = () => {
   return (
     <section className="min-h-screen">
-      <ProductsView />
+      <ProductView />
     </section>
   );
 };
