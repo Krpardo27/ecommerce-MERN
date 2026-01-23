@@ -83,15 +83,33 @@ export const products = [
 
   // ───────────── COMPONENTES PC ─────────────
   {
-    nombre: "Memoria RAM DDR5 32GB 6000MHz",
-    slug: "ram-ddr5-32gb-6000mhz",
-    precio: 189990,
+    nombre: "CORSAIR Vengeance DDR5 16 GB (2x8GB) 5200 MHz",
+    slug: "ram-ddr5-2x8gb-5200mhz",
+    precio: 284990,
     descripcion:
-      "Memoria RAM DDR5 de alto rendimiento para gaming y creación de contenido.",
+      "La memoria Crucial de 32 GB DDR5 Pro Series: Overclocked Edition (CP2K16G60C36U5B) lleva el rendimiento de los juegos al siguiente nivel con velocidades asombrosas y ancho de banda masivo. Este kit de memoria RAM DDR5 de overclocking (2x16GB) está diseñado con disipadores de calor de aluminio de última generación para disipar el calor de manera efectiva. Inspirados en el arte de Origami, estos difusores de calor cumplen una doble función de lucir lúdico y único mientras mantienen tu sistema más fresco durante los juegos AAA de ritmo rápido o intensivos en memoria. El rendimiento aumenta un nivel con tiempos extendidos de 36-38-38-80, lo que garantiza un rendimiento de overclocking estable y una latencia más baja del 25% en comparación con los módulos DRAM Plug-and-Play de la serie Crucial Pro.",
     categoriaKey: "componentes-pc",
-    imagenes: [
-      "https://images.pexels.com/photos/442583/pexels-photo-442583.jpeg",
-    ],
+    imagenes: ["../ram/corsair/CORSAIR-Vengeance-DDR5-16GB-(2x8GB).jpg"],
+    activo: true,
+  },
+  {
+    nombre: "CORSAIR Vengeance RGB DDR5 RAM 16GB (2x8GB) 5200MHz",
+    slug: "ram-ddr5-16gb-5200MHz",
+    precio: 284990,
+    descripcion:
+      "CORSAIR La memoria DDR5 RGB VENGEANCE ofrece rendimiento DDR5, frecuencias más altas y mayores capacidades optimizadas para placas base Intel mientras ilumina su PC con iluminación RGB de diez zonas dinámica y direccionable individualmente. Los chips de memoria de alta frecuencia estrechamente protegidos permiten un procesamiento, renderizado y almacenamiento en búfer más rápidos que nunca, con regulación de voltaje integrada para un overclocking fácil y finamente controlado. Tome el control con el software CORSAIR iCUE y habilite la personalización de iluminación RGB, monitoreo de frecuencia en tiempo real, regulación de voltaje integrada y personalización de perfiles Intel XMP 3.0. Una PCB personalizada proporciona una excelente calidad de señal para un alto rendimiento y estabilidad en las últimas placas base Intel DDR5. Para un rendimiento DDR5 de vanguardia con iluminación RGB fascinante, VENGEANCE RGB DDR5 ilumina el camino.",
+    categoriaKey: "componentes-pc",
+    imagenes: ["../ram/corsair/CORSAIR-Vengeance-RGB-DDR5-RAM-16GB.jpg"],
+    activo: true,
+  },
+  {
+    nombre: "Crucial Pro Kit de RAM DDR5 de 32GB (2x16GB) 6000MHz",
+    slug: "ram-ddr5-2x16gb-6000mhz",
+    precio: 284990,
+    descripcion:
+      "La memoria Crucial de 32 GB DDR5 Pro Series: Overclocked Edition (CP2K16G60C36U5B) lleva el rendimiento de los juegos al siguiente nivel con velocidades asombrosas y ancho de banda masivo. Este kit de memoria RAM DDR5 de overclocking (2x16GB) está diseñado con disipadores de calor de aluminio de última generación para disipar el calor de manera efectiva. Inspirados en el arte de Origami, estos difusores de calor cumplen una doble función de lucir lúdico y único mientras mantienen tu sistema más fresco durante los juegos AAA de ritmo rápido o intensivos en memoria. El rendimiento aumenta un nivel con tiempos extendidos de 36-38-38-80, lo que garantiza un rendimiento de overclocking estable y una latencia más baja del 25% en comparación con los módulos DRAM Plug-and-Play de la serie Crucial Pro.",
+    categoriaKey: "componentes-pc",
+    imagenes: ["../ram/crucial/crucial-memoria-ram-ddr5-32gb.jpg"],
     activo: true,
   },
   {
@@ -119,26 +137,24 @@ export const products = [
 
   // ───────────── AUDIO GAMER ─────────────
   {
-    nombre: "Audífonos Gamer 7.1 Surround",
-    slug: "audifonos-gamer-7-1",
+    nombre: "Auriculares para juegos Razer Barracuda X Chroma inalámbricos",
+    slug: "auriculares-para-juegos-razer-barracuda-x-chroma-inalambricos",
     precio: 69990,
     descripcion:
-      "Audífonos gamer con sonido envolvente 7.1 y micrófono desmontable.",
+      "Ya sea que estés en casa o en movimiento, experimenta una verdadera versatilidad de audio y estilo en cualquier lugar con el Razer Barracuda X Chroma. Disfruta de un audio perfecto para cualquier actividad con Razer SmartSwitch Dual Wireless. Alterna rápidamente entre las conexiones inalámbricas Razer HyperSpeed y Bluetooth, así como capta llamadas fácilmente sin tener que jugar con tu teléfono. Con un diseño ergonómico de 10.05 oz, los auriculares están hechos para ser ligeros para comodidad durante todo el día tanto en interiores como en exteriores, con bandas ajustables para adaptarse a cualquier tamaño de cabeza, una banda superior acolchada para una distribución uniforme del peso y almohadillas de espuma viscoelástica para evitar la fatiga. Con iluminación para auriculares de 6 zonas alimentada por Razer Chroma RGB, los auriculares ahora pueden admitir más efectos Razer Chroma RGB: lleva la personalización al siguiente nivel con la aplicación de audio de Razer o personaliza cada zona a través de Chroma Studio para lograr imágenes impresionantes. Los controladores de 1.575 in con un diseño patentado que sintoniza las frecuencias altas, medias y bajas individualmente, asegurando una experiencia auditiva potente y realista. Equipado con un micrófono cardioide HyperClear desmontable mejorado, proporciona una captura de voz mejorada para comunicaciones nítidas del equipo y es fácilmente extraíble cuando sea necesario. Con una duración mejorada de la batería que dura hasta 70 horas para uso de varios días, una carga rápida de 15 minutos producirá aproximadamente 6 horas de juego.",
     categoriaKey: "audio-gamer",
-    imagenes: [
-      "https://images.pexels.com/photos/159526/headphones-headset-earpads-listen-159526.jpeg",
-    ],
+    imagenes: ["../razer/audio/Razer-Barracuda-X-Chroma-inalambricos.jpg"],
     activo: true,
   },
   {
-    nombre: "Headset Gamer Wireless",
-    slug: "headset-gamer-wireless",
+    nombre: "Razer BlackShark V2 X",
+    slug: "razer-blackshark-v2-x",
     precio: 89990,
     descripcion:
-      "Headset inalámbrico gamer con baja latencia y gran autonomía.",
+      "Sumérgete en el sonido de los deportes con los BlackShark V2 X de Razer; te ofrecen un audio increíble, un micrófono de claridad superior y un aislamiento acústico supremo. Este conjunto incluye nuestro mejor micrófono para auriculares y nuestros mejores controladores de sonido en unos auriculares de estilo de aviación únicos; con ellos tu juego de competición está destinado a convertirse en pro.",
     categoriaKey: "audio-gamer",
     imagenes: [
-      "https://images.pexels.com/photos/704264/pexels-photo-704264.jpeg",
+      "../razer/audio/razer-blackshark-v2-x.jpg",
     ],
     activo: true,
   },

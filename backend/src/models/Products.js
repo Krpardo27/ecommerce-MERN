@@ -31,8 +31,8 @@ const productSchema = new mongoose.Schema(
     },
     imagenes: [
       {
-        type: String,
-        required: true,
+        url: { type: String, required: true },
+        publicId: { type: String, required: true },
       },
     ],
     activo: {
@@ -44,7 +44,7 @@ const productSchema = new mongoose.Schema(
   {
     timestamps: true,
     collection: "products",
-  }
+  },
 );
 
 export default mongoose.model("Products", productSchema);
