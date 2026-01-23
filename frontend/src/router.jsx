@@ -10,6 +10,8 @@ import Contacto from "./views/Contacto";
 import Products from "./views/Products";
 import CarritoLayout from "./layouts/CarritoLayout";
 import ProductDetail from "./views/ProductDetail ";
+import AdminLayout from "./layouts/AdminLayout";
+import Dashboard from "./views/admin/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +55,16 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Carrito />,
+      },
+    ],
+  },
+  {
+    path: "/admin/login",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dashboard />,
       },
     ],
   },
