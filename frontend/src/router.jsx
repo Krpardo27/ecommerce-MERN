@@ -15,6 +15,7 @@ import Dashboard from "./views/admin/Dashboard";
 import Productos from "./views/admin/Productos";
 import { ToastProvider } from "./context/ToastContext";
 import CategoriasAdmin from "./views/admin/CategoriasAdmin";
+import ProductoNuevo from "./views/admin/ProductoNuevo";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
       {
         path: "categorias",
         element: <CategoriasAdmin />,
+      },
+      {
+        path: "productos/crear-producto",
+        element: <ProductoNuevo />,
       },
     ],
   },

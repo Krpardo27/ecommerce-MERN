@@ -1,4 +1,4 @@
-import Categoria from "../models/Categoria.js";
+import Categoria from "../models/Categorias.js";
 
 export const obtenerCategorias = async (req, res) => {
   const categorias = await Categoria.find().sort({ nombre: 1 });

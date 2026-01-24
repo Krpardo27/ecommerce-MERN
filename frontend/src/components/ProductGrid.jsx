@@ -1,7 +1,7 @@
 import ProductCard from "./ProductCard";
 
-const ProductGrid = ({ productos, onAddToCart }) => {
-  if (!productos || productos.length === 0) {
+const ProductsGrid = ({ productos = [], onAddToCart }) => {
+  if (!productos.length) {
     return (
       <p className="text-sm text-zinc-500 mt-10">
         No hay productos disponibles.
@@ -20,14 +20,10 @@ const ProductGrid = ({ productos, onAddToCart }) => {
       "
     >
       {productos.map((p) => (
-        <ProductCard
-          key={p._id}
-          producto={p}
-          onAddToCart={onAddToCart}
-        />
+        <ProductCard key={p._id} producto={p} onAddToCart={onAddToCart} />
       ))}
     </section>
   );
 };
 
-export default ProductGrid;
+export default ProductsGrid;

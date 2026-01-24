@@ -35,17 +35,35 @@ const HeaderAdmin = ({ onOpenSidebar }) => {
           <div className="ml-auto flex items-center gap-2">
             <button
               type="button"
-              onClick={() => navigate("/admin/products/new")}
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white text-zinc-950 hover:bg-zinc-200 transition font-semibold"
+              onClick={() => navigate("/admin/productos/crear-producto")}
+              className="
+      hidden sm:inline-flex
+      items-center gap-2
+      px-4 py-2
+      rounded-xl
+      bg-white text-zinc-950
+      hover:bg-zinc-200
+      transition
+      font-semibold
+    "
             >
               <FiBox />
               Nuevo producto
             </button>
 
+            {/* 🚪 Logout */}
             <button
               type="button"
               onClick={handleLogout}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-zinc-800 text-zinc-200 hover:bg-zinc-900 hover:text-white transition"
+              className="
+      inline-flex items-center gap-2
+      px-4 py-2
+      rounded-xl
+      border border-zinc-800
+      text-zinc-200
+      hover:bg-zinc-900 hover:text-white
+      transition
+    "
             >
               <FiLogOut />
               <span className="hidden sm:inline">Salir</span>

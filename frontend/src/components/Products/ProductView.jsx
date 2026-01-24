@@ -10,7 +10,12 @@ import ProductsGrid from "./ProductsGrid";
 import Sidebar from "../Sidebar";
 
 const ProductView = () => {
-  const { productos, loading, error } = useProductos();
+  const {
+    data: productos = [],
+    isLoading: loading,
+    isError: error,
+  } = useProductos();
+
   const { showLoader, hideLoader } = useLoading();
 
   const [params, setParams] = useSearchParams();
@@ -28,9 +33,7 @@ const ProductView = () => {
     const q = search.trim().toLowerCase();
 
     return productos.filter((p) => {
-      const matchCategoria = categoria
-        ? p?.categoria?.slug === categoria
-        : true;
+      const matchCategoria = categoria ? p?.categoriaKey === categoria : true;
 
       const matchSearch = q ? p?.nombre?.toLowerCase().includes(q) : true;
 

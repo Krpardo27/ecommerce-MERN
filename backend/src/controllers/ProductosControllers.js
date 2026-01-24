@@ -1,10 +1,8 @@
-import Products from "../models/Products.js";
+import Productos from "../models/Productos.js";
 
 export const getProductos = async (req, res) => {
   try {
-    const productos = await Products.find()
-      .populate("categoria", "nombre")
-      .lean();
+    const productos = await Productos.find().lean();
 
     return res.status(200).json(productos);
   } catch (error) {
@@ -16,7 +14,7 @@ export const getProductos = async (req, res) => {
 };
 
 export const obtenerProductoPorSlug = async (req, res) => {
-  const producto = await Products.findOne({ slug: req.params.slug }).populate(
+  const producto = await Productos.findOne({ slug: req.params.slug }).populate(
     "categoria",
     "nombre slug imagen",
   );

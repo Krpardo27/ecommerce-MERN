@@ -2,8 +2,10 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { connectDB } from "./config/db.js";
+import adminRoutes from "./routes/AdminRoutes.js";
 import productRoutes from "./routes/ProductosRoutes.js";
 import categoriesRoutes from "./routes/CategoriasRoutes.js";
+import upload from "./middleware/upload.js";
 
 connectDB();
 
@@ -41,7 +43,8 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
+app.use("/api/admin", upload.array("imagenes", 4), adminRoutes);
 app.use("/api/productos", productRoutes);
-app.use("/api/categories", categoriesRoutes);
+app.use("/api/categorias", categoriesRoutes);
 
 export default app;

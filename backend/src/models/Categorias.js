@@ -7,6 +7,7 @@ const categoriaSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
     slug: {
       type: String,
       required: true,
@@ -14,10 +15,12 @@ const categoriaSchema = new mongoose.Schema(
       lowercase: true,
       index: true,
     },
+
     imagen: {
       type: String,
       required: true,
     },
+
     activo: {
       type: Boolean,
       default: true,
@@ -26,7 +29,7 @@ const categoriaSchema = new mongoose.Schema(
   {
     timestamps: true,
     collection: "categorias",
-  }
+  },
 );
 
-export default mongoose.model("Categoria", categoriaSchema);
+export default mongoose.model("Categoria", categoriaSchema, "categorias");
