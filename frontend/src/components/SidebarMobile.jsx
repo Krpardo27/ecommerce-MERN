@@ -3,7 +3,7 @@ import { useProductos } from "../hooks/queries/useProductos";
 import { useState } from "react";
 import { SidebarContent } from "./Sidebar";
 
-const SidebarMobile = ({ categoriaActiva, onChangeCategoria }) => {
+const SidebarMobile = ({ categoriaActiva, onChangeCategoria, updateParams }) => {
   const { categorias } = useProductos();
   const [open, setOpen] = useState(false);
 
@@ -33,6 +33,7 @@ const SidebarMobile = ({ categoriaActiva, onChangeCategoria }) => {
               categorias={categorias}
               categoriaActiva={categoriaActiva}
               onChangeCategoria={(slug) => {
+                updateParams({ categoria: slug, page: 1 });
                 onChangeCategoria(slug);
                 setOpen(false);
               }}
