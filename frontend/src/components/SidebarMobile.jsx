@@ -1,5 +1,5 @@
 import { FiX, FiSliders } from "react-icons/fi";
-import { useProductos } from "../hooks/useProductos";
+import { useProductos } from "../hooks/queries/useProductos";
 import { useState } from "react";
 import { SidebarContent } from "./Sidebar";
 

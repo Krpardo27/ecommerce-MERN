@@ -1,17 +1,24 @@
 import Products from "../models/Products.js";
 
-export const obtenerProductos = async (req, res) => {
-  const productos = await Products.find({ activo: true })
-    .populate("categoria", "nombre slug imagen")
-    .sort({ createdAt: -1 });
+export const getProductos = async (req, res) => {
+  try {
+    const productos = await Products.find()
+      .populate("categoria", "nombre")
+      .lean();
 
-  res.json(productos);
+    return res.status(200).json(productos);
+  } catch (error) {
+    console.error("❌ getProductos error:", error);
+    return res.status(500).json({
+      message: "Error al obtener productos",
+    });
+  }
 };
 
 export const obtenerProductoPorSlug = async (req, res) => {
   const producto = await Products.findOne({ slug: req.params.slug }).populate(
     "categoria",
-    "nombre slug imagen"
+    "nombre slug imagen",
   );
 
   if (!producto) {

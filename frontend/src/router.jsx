@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 
 import Home from "./views/Home";
@@ -12,6 +12,9 @@ import CarritoLayout from "./layouts/CarritoLayout";
 import ProductDetail from "./views/ProductDetail ";
 import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./views/admin/Dashboard";
+import Productos from "./views/admin/Productos";
+import { ToastProvider } from "./context/ToastContext";
+import CategoriasAdmin from "./views/admin/CategoriasAdmin";
 
 export const router = createBrowserRouter([
   {
@@ -49,22 +52,38 @@ export const router = createBrowserRouter([
     ],
   },
   {
+    path: "admin",
+    element: (
+      <ToastProvider>
+        <AdminLayout />
+      </ToastProvider>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Navigate to="dashboard" replace />,
+      },
+      {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
+        path: "productos",
+        element: <Productos />,
+      },
+      {
+        path: "categorias",
+        element: <CategoriasAdmin />,
+      },
+    ],
+  },
+  {
     path: "carrito",
     element: <CarritoLayout />,
     children: [
       {
         index: true,
         element: <Carrito />,
-      },
-    ],
-  },
-  {
-    path: "/admin/login",
-    element: <AdminLayout />,
-    children: [
-      {
-        index: true,
-        element: <Dashboard />,
       },
     ],
   },
