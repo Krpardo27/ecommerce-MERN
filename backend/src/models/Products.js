@@ -16,7 +16,7 @@ const productSchema = new mongoose.Schema(
     },
     precio: {
       type: Number,
-      required: true, // CLP, sin decimales
+      required: true,
       min: 0,
     },
     descripcion: {

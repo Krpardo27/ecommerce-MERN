@@ -6,7 +6,7 @@ import {
   FiVideo,
   FiBox,
 } from "react-icons/fi";
-import { useProductos } from "../hooks/useProductos";
+import { useProductos } from "../hooks/queries/useProductos";
 
 const iconBySlug = {
   perifericos: FiMousePointer,
@@ -22,7 +22,6 @@ const SidebarContent = ({ categorias, categoriaActiva, onChangeCategoria }) => {
       <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-6">
         Categorías
       </h2>
-
       <ul className="space-y-1">
         <li>
           <button

@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useLoading } from "../../hooks/useLoading";
-import { useProductos } from "../../hooks/useProductos";
+import { useProductos } from "../../hooks/queries/useProductos";
 import { useEffect, useMemo } from "react";
 import ProductsControls from "./ProductsControls";
 import SidebarMobile from "../SidebarMobile";

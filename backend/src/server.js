@@ -41,7 +41,7 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-app.use("/api/products", productRoutes);
+app.use("/api/productos", productRoutes);
 app.use("/api/categories", categoriesRoutes);
 
 export default app;

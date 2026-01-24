@@ -1,4 +1,4 @@
-import { useProductos } from "../hooks/useProductos";
+import { useProductos } from "../hooks/queries/useProductos";
 import ProductGrid from "../components/ProductGrid";
 import Loader from "../components/Loader";
 import { useLoading } from "../hooks/useLoading";
