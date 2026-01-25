@@ -23,7 +23,7 @@ export const CartProvider = ({ children }) => {
       if (existing) {
         existed = true;
         return prev.map((p) =>
-          p._id === producto._id ? { ...p, qty: p.qty + 1 } : p
+          p._id === producto._id ? { ...p, qty: p.qty + 1 } : p,
         );
       }
 
@@ -44,14 +44,16 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem("cart", JSON.stringify(items));
   }, [items]);
 
+  const safeItems = Array.isArray(items) ? items : [];
+
   const totalItems = useMemo(
-    () => items.reduce((acc, p) => acc + p.qty, 0),
-    [items]
+    () => safeItems.reduce((acc, p) => acc + (p.qty || 0), 0),
+    [safeItems],
   );
 
   const totalPrice = useMemo(
-    () => items.reduce((acc, p) => acc + p.precio * p.qty, 0),
-    [items]
+    () => safeItems.reduce((acc, p) => acc + (p.precio || 0) * (p.qty || 0), 0),
+    [safeItems],
   );
 
   const value = {

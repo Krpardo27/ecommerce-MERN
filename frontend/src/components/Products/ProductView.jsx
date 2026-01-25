@@ -30,16 +30,21 @@ const ProductView = () => {
   }, [loading, showLoader, hideLoader]);
 
   const productosFiltrados = useMemo(() => {
+    if (!Array.isArray(productos)) return [];
+
     const q = search.trim().toLowerCase();
 
     return productos.filter((p) => {
-      const matchCategoria = categoria ? p?.categoriaKey === categoria : true;
+      const matchCategoria =
+        categoriaActiva === null
+          ? true
+          : p?.categoria?.slug === categoriaActiva;
 
       const matchSearch = q ? p?.nombre?.toLowerCase().includes(q) : true;
 
       return matchCategoria && matchSearch;
     });
-  }, [productos, categoria, search]);
+  }, [productos, categoriaActiva, search]);
 
   const itemsPerPage =
     limit === "all" ? productosFiltrados.length : Number(limit);
@@ -47,11 +52,12 @@ const ProductView = () => {
   const totalPages = Math.ceil(productosFiltrados.length / itemsPerPage);
 
   const productosVisibles = useMemo(() => {
-    if (limit === "all") return productosFiltrados;
+    if (!Array.isArray(productosFiltrados)) return [];
 
-    const start = (page - 1) * itemsPerPage;
-    return productosFiltrados.slice(start, start + itemsPerPage);
-  }, [productosFiltrados, page, itemsPerPage, limit]);
+    return limit === "all"
+      ? productosFiltrados
+      : productosFiltrados.slice(0, limit);
+  }, [productosFiltrados, limit]);
 
   const updateParams = (newParams) => {
     setParams((prev) => {

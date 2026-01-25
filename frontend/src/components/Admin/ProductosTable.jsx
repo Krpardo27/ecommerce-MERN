@@ -19,8 +19,6 @@ const ProductosTable = () => {
   const [rowSelection, setRowSelection] = useState({});
   const [columnFilters, setColumnFilters] = useState([]);
 
-  
-
   const columns = useMemo(
     () => [
       {
@@ -100,9 +98,11 @@ const ProductosTable = () => {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  const safeData = useMemo(() => (Array.isArray(data) ? data : []), [data]);
+
   const categoriasUnicas = useMemo(() => {
-    return [...new Set(data.map((p) => p.categoriaKey).filter(Boolean))];
-  }, [data]);
+    return [...new Set(safeData.map((p) => p?.categoriaKey).filter(Boolean))];
+  }, [safeData]);
 
   const selectedRows = table.getSelectedRowModel().rows;
   const selectedCount = selectedRows.length;

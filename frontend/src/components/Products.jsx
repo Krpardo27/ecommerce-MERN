@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { FiSearch, FiX } from "react-icons/fi";
 import Sidebar from "../components/Sidebar";
-import { useProductos } from "../hooks/useProductos";
 import { useLoading } from "../hooks/useLoading";
 import { useCartContext } from "../hooks/useCart";
 import { useToast } from "../hooks/useToast";
@@ -9,17 +8,29 @@ import { useToast } from "../hooks/useToast";
 import ProductCard from "./ProductCard";
 import SidebarMobile from "./SidebarMobile";
 import ProductCardSkeleton from "./ProductCardSkeleton";
-import Paginator from "./Paginator";
+import { useProductos } from "../hooks/queries/useProductos";
 
 const Products = () => {
-  const { productos, loading, error, totalProductos } = useProductos();
+  const {
+    productos: rawProductos,
+    loading,
+    error,
+    totalProductos,
+  } = useProductos();
+
   const [categoriaActiva, setCategoriaActiva] = useState(null);
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(12);
   const { addToCart } = useCartContext();
   const { showToast } = useToast();
 
+  const productos = Array.isArray(rawProductos)
+    ? rawProductos
+    : (rawProductos?.productos ?? []);
+
   const productosFiltrados = useMemo(() => {
+    if (!Array.isArray(productos)) return [];
+
     const q = search.trim().toLowerCase();
 
     return productos.filter((p) => {
@@ -123,7 +134,7 @@ const Products = () => {
               value={limit}
               onChange={(e) =>
                 setLimit(
-                  e.target.value === "all" ? "all" : Number(e.target.value)
+                  e.target.value === "all" ? "all" : Number(e.target.value),
                 )
               }
               className="
@@ -160,7 +171,7 @@ const Products = () => {
         >
           {loading
             ? Array.from({ length: limit === "all" ? 12 : limit }).map(
-                (_, i) => <ProductCardSkeleton key={i} />
+                (_, i) => <ProductCardSkeleton key={i} />,
               )
             : productosVisibles.map((p) => (
                 <ProductCard
