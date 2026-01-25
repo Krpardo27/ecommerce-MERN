@@ -15,7 +15,6 @@ console.log("BACKEND:", import.meta.env.VITE_BACKEND_URL);
 
 const ProductosTable = () => {
   const { data = [], isLoading, isError } = useProductos();
-  console.log("PRODUCTOS QUERY:", data);
   const [rowSelection, setRowSelection] = useState({});
   const [columnFilters, setColumnFilters] = useState([]);
 
