@@ -1,20 +1,22 @@
-import Productos from "../models/Productos.js";
+import Producto from "../models/Producto.js";
 
 export const getProductos = async (req, res) => {
   try {
-    const productos = await Productos.find().lean();
+    const productos = await Producto.find().lean();
 
-    return res.status(200).json(productos);
+    console.log("📦 Total productos en BD:", productos.length);
+
+    res.status(200).json(productos);
   } catch (error) {
     console.error("❌ getProductos error:", error);
-    return res.status(500).json({
+    res.status(500).json({
       message: "Error al obtener productos",
     });
   }
 };
 
 export const obtenerProductoPorSlug = async (req, res) => {
-  const producto = await Productos.findOne({ slug: req.params.slug }).populate(
+  const producto = await Producto.findOne({ slug: req.params.slug }).populate(
     "categoria",
     "nombre slug imagen",
   );

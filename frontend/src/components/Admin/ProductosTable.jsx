@@ -11,10 +11,15 @@ import { useProductos } from "../../hooks/queries/useProductos";
 import ProductStatusBadge from "./ProductStatusBadge";
 import ProductActions from "./ProductActions";
 
+console.log("BACKEND:", import.meta.env.VITE_BACKEND_URL);
+
 const ProductosTable = () => {
   const { data = [], isLoading, isError } = useProductos();
+  console.log("PRODUCTOS QUERY:", data);
   const [rowSelection, setRowSelection] = useState({});
   const [columnFilters, setColumnFilters] = useState([]);
+
+  
 
   const columns = useMemo(
     () => [
@@ -47,10 +52,19 @@ const ProductosTable = () => {
         header: "Producto",
       },
       {
-        id: "categoria",
+        accessorKey: "categoriaKey",
         header: "Categoría",
-        accessorFn: (row) => row.categoria?.nombre ?? "",
-        cell: ({ getValue }) => getValue() || "Sin categoría",
+        cell: ({ getValue }) => {
+          const map = {
+            perifericos: "Periféricos",
+            "componentes-pc": "Componentes PC",
+            "audio-gamer": "Audio Gamer",
+            "sillas-gamer": "Sillas Gamer",
+            streaming: "Streaming",
+          };
+
+          return map[getValue()] ?? "Sin categoría";
+        },
         filterFn: "equalsString",
       },
       {
@@ -87,11 +101,19 @@ const ProductosTable = () => {
   });
 
   const categoriasUnicas = useMemo(() => {
-    return [...new Set(data.map((p) => p.categoria?.nombre).filter(Boolean))];
+    return [...new Set(data.map((p) => p.categoriaKey).filter(Boolean))];
   }, [data]);
 
   const selectedRows = table.getSelectedRowModel().rows;
   const selectedCount = selectedRows.length;
+
+  const CATEGORY_LABELS = {
+    perifericos: "Periféricos",
+    "componentes-pc": "Componentes PC",
+    "audio-gamer": "Audio Gamer",
+    "sillas-gamer": "Sillas Gamer",
+    streaming: "Streaming",
+  };
 
   if (isLoading) {
     return <div className="text-zinc-400 text-sm">Cargando productos…</div>;
@@ -111,13 +133,12 @@ const ProductosTable = () => {
 
   return (
     <div className="rounded-xl border border-zinc-800 overflow-hidden">
-      {/* 🔹 Filtro por categoría */}
       <div className="flex items-center gap-4 p-4 border-b border-zinc-800">
         <select
-          value={table.getColumn("categoria")?.getFilterValue() ?? ""}
+          value={table.getColumn("categoriaKey")?.getFilterValue() ?? ""}
           onChange={(e) =>
             table
-              .getColumn("categoria")
+              .getColumn("categoriaKey")
               ?.setFilterValue(e.target.value || undefined)
           }
           className="
@@ -132,7 +153,7 @@ const ProductosTable = () => {
 
           {categoriasUnicas.map((cat) => (
             <option key={cat} value={cat}>
-              {cat}
+              {CATEGORY_LABELS[cat] ?? cat}
             </option>
           ))}
         </select>

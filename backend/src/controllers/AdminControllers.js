@@ -1,5 +1,5 @@
 import cloudinary from "../config/cloudinary.js";
-import Producto from "../models/Productos.js";
+import Producto from "../models/Producto.js";
 import slugify from "slugify";
 
 export const addProduct = async (req, res) => {
