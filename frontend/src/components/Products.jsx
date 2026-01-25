@@ -24,13 +24,13 @@ const Products = () => {
   const { addToCart } = useCartContext();
   const { showToast } = useToast();
 
-  const productos = Array.isArray(rawProductos)
-    ? rawProductos
-    : (rawProductos?.productos ?? []);
+  const productos = useMemo(() => {
+    return Array.isArray(rawProductos)
+      ? rawProductos
+      : (rawProductos?.productos ?? []);
+  }, [rawProductos]);
 
   const productosFiltrados = useMemo(() => {
-    if (!Array.isArray(productos)) return [];
-
     const q = search.trim().toLowerCase();
 
     return productos.filter((p) => {
