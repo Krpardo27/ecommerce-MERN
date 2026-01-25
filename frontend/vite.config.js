@@ -14,4 +14,19 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("react")) return "react";
+            if (id.includes("@tanstack")) return "tanstack";
+            if (id.includes("sweetalert2")) return "sweetalert";
+            if (id.includes("react-icons")) return "icons";
+            return "vendor";
+          }
+        },
+      },
+    },
+  },
 });
