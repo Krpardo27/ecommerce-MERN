@@ -8,16 +8,11 @@ const SCROLL_THRESHOLD = 40;
 
 const Header = () => {
   const { totalItems } = useCartContext();
-
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
   const drawerRef = useRef(null);
   const touchStartX = useRef(null);
 
-  /* ────────────────────────────── */
-  /* SHRINK ON SCROLL               */
-  /* ────────────────────────────── */
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > SCROLL_THRESHOLD);
@@ -27,9 +22,6 @@ const Header = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  /* ────────────────────────────── */
-  /* SWIPE TO CLOSE (MOBILE)        */
-  /* ────────────────────────────── */
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
   };
