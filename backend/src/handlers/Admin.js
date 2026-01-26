@@ -27,7 +27,6 @@ export const addProduct = async (req, res) => {
     console.log("files:", req.files?.length);
     console.log("body:", req.body);
 
-    // 🔹 Subir imágenes a Cloudinary
     const uploadPromises = req.files.map((file) =>
       cloudinary.uploader.upload(
         `data:${file.mimetype};base64,${file.buffer.toString("base64")}`,
@@ -72,3 +71,5 @@ export const addProduct = async (req, res) => {
     });
   }
 };
+
+

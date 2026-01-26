@@ -8,7 +8,7 @@ const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="h-screen w-full bg-zinc-950 text-zinc-100 flex">
+    <div className="min-h-screen w-full bg-zinc-950 text-zinc-100 flex">
       <SidebarAdmin
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}

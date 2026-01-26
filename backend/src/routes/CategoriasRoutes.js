@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-  obtenerCategorias,
-  obtenerCategoriaPorSlug,
   crearCategoria,
-} from "../controllers/CategoriasControllers.js";
+  obtenerCategoriaPorSlug,
+  obtenerCategorias,
+} from "../handlers/Categorias.js";
 
 const router = Router();
 

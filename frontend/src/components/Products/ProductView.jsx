@@ -35,16 +35,15 @@ const ProductView = () => {
     const q = search.trim().toLowerCase();
 
     return productos.filter((p) => {
-      const matchCategoria =
-        categoriaActiva === null
-          ? true
-          : p?.categoria?.slug === categoriaActiva;
+      const matchCategoria = !categoria
+        ? true
+        : p?.categoria?.slug === categoria;
 
       const matchSearch = q ? p?.nombre?.toLowerCase().includes(q) : true;
 
       return matchCategoria && matchSearch;
     });
-  }, [productos, categoriaActiva, search]);
+  }, [productos, categoria, search]);
 
   const itemsPerPage =
     limit === "all" ? productosFiltrados.length : Number(limit);
