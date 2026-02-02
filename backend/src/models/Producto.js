@@ -17,6 +17,11 @@ const productosSchema = new mongoose.Schema(
         "streaming",
       ],
     },
+    subcategoriaKey: {
+      type: String,
+      required: true,
+      index: true,
+    },
     imagenes: {
       type: [String],
       validate: {

@@ -1,6 +1,27 @@
+import { useQuery } from "@tanstack/react-query";
 import { FiUser, FiMail, FiLock, FiShoppingBag } from "react-icons/fi";
+import { getUser } from "../../api/usuarios";
 
 const Perfil = () => {
+  const {
+    data: user,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: getUser,
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+
+  if (isLoading) {
+    return <p className="text-zinc-400">Cargando perfil…</p>;
+  }
+
+  if (isError || !user) {
+    return <p className="text-red-400">No se pudo cargar el perfil</p>;
+  }
+
   return (
     <div className="max-w-5xl mx-auto px-6 py-10 space-y-10">
       <header className="flex items-center gap-6">
@@ -24,10 +45,10 @@ const Perfil = () => {
 
           <div className="text-sm text-zinc-300 space-y-1">
             <p>
-              <span className="text-zinc-400">Nombre:</span> Juan Pérez
+              <span className="text-zinc-400">Nombre:</span> {user.name || "—"}
             </p>
             <p>
-              <span className="text-zinc-400">Email:</span> juan@email.com
+              <span className="text-zinc-400">Email:</span> {user.email || "—"}
             </p>
           </div>
         </div>

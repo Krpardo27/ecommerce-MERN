@@ -29,15 +29,16 @@ const SidebarAdmin = ({ isOpen, onClose }) => {
       <aside
         className={cn(
           "fixed z-50 lg:static lg:z-auto",
-          "h-full w-[280px] bg-zinc-950 text-zinc-100",
+          "min-h-screen w-[280px] bg-zinc-950 text-zinc-100",
           "border-r border-zinc-800/70",
+          "flex flex-col", // 🔑 IMPORTANTE
           "transition-transform duration-200",
           isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
         {/* Header */}
-        <div className="px-5 py-5 border-b border-zinc-800/70 flex items-center justify-between">
-          <div className="flex flex-col">
+        <div className="h-16 px-5 border-b border-zinc-800/70 flex items-center justify-between">
+          <div className="flex flex-col leading-tight">
             <span className="text-sm text-zinc-400">Admin Panel</span>
             <span className="text-lg font-semibold tracking-tight">
               Gamer Store

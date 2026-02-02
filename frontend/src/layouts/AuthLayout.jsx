@@ -1,6 +1,7 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 
 const AuthLayout = () => {
+
   return (
     <div className="min-h-screen w-full bg-zinc-950 text-zinc-100 relative overflow-hidden">
       {/* Glow background */}

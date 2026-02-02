@@ -1,5 +1,4 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import MainLayout from "./layouts/MainLayout";
 
 import Home from "./views/Home";
 import Categorias from "./views/Categorias";
@@ -9,25 +8,29 @@ import Blog from "./views/Blog";
 import Contacto from "./views/Contacto";
 import Products from "./views/Products";
 import CarritoLayout from "./layouts/CarritoLayout";
-import AdminLayout from "./layouts/AdminLayout";
-import Dashboard from "./views/admin/Dashboard";
 import Productos from "./views/admin/Productos";
 import CategoriasAdmin from "./views/admin/CategoriasAdmin";
 import ProductoNuevo from "./views/admin/ProductoNuevo";
 import LoginView from "./views/LoginView";
 import RegisterView from "./views/RegisterView";
-import AuthLayout from "./layouts/AuthLayout";
-import UserLayout from "./layouts/UserLayout";
 import Perfil from "./views/user/Perfil";
 import { ToastProvider } from "./context/ToastContext";
 import ProductDetail from "./views/ProductDetail ";
 import MisCompras from "./views/user/MisCompras";
 import Direcciones from "./views/user/Direcciones";
+import AdminDashboard from "./views/admin/AdminDashboard";
+import AdminLogin from "./views/admin/AdminLogin";
+import AdminAuthLayout from "./layouts/AdminAuthLayout";
+import AdminProtectedRoute from "./layouts/AdminProtectedRoute";
+import AdminPanelLayout from "./layouts/AdminPanelLayout";
+import EcommerceLayout from "./layouts/EcommerceLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import ProfileLayout from "./layouts/ProfileLayout";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <MainLayout />,
+    element: <EcommerceLayout />,
     children: [
       { index: true, element: <Home /> },
       { path: "nosotros", element: <Nosotros /> },
@@ -56,7 +59,7 @@ export const router = createBrowserRouter([
         path: "profile",
         element: (
           <ToastProvider>
-            <UserLayout />
+            <ProfileLayout />
           </ToastProvider>
         ),
         children: [
@@ -76,17 +79,37 @@ export const router = createBrowserRouter([
 
   {
     path: "admin",
-    element: (
-      <ToastProvider>
-        <AdminLayout />
-      </ToastProvider>
-    ),
     children: [
-      { index: true, element: <Navigate to="dashboard" replace /> },
-      { path: "dashboard", element: <Dashboard /> },
-      { path: "productos", element: <Productos /> },
-      { path: "categorias", element: <CategoriasAdmin /> },
-      { path: "productos/crear-producto", element: <ProductoNuevo /> },
+      // 🔓 AUTH
+      {
+        element: (
+          <ToastProvider>
+            <AdminAuthLayout />
+          </ToastProvider>
+        ),
+        children: [{ path: "login", element: <AdminLogin /> }],
+      },
+
+      // 🔒 PROTECTED (GUARD)
+      {
+        element: <AdminProtectedRoute />,
+        children: [
+          {
+            element: (
+              <ToastProvider>
+                <AdminPanelLayout />
+              </ToastProvider>
+            ),
+            children: [
+              { index: true, element: <Navigate to="dashboard" replace /> },
+              { path: "dashboard", element: <AdminDashboard /> },
+              { path: "productos", element: <Productos /> },
+              { path: "categorias", element: <CategoriasAdmin /> },
+              { path: "productos/crear-producto", element: <ProductoNuevo /> },
+            ],
+          },
+        ],
+      },
     ],
   },
 

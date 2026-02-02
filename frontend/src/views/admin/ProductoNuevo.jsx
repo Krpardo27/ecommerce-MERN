@@ -5,6 +5,7 @@ import { FiArrowLeft, FiSave, FiX } from "react-icons/fi";
 
 import { useAddProduct } from "../../hooks/mutations/useAddProduct";
 import { categories } from "../../data/categories";
+import { useEffect } from "react";
 
 const NuevoProducto = () => {
   const navigate = useNavigate();
@@ -13,9 +14,13 @@ const NuevoProducto = () => {
   const [imagenes, setImagenes] = useState([]);
   const [imageError, setImageError] = useState("");
 
+  const [subcategorias, setSubcategorias] = useState([]);
+
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -23,32 +28,21 @@ const NuevoProducto = () => {
       precio: "",
       descripcion: "",
       categoriaKey: "",
+      subcategoriaKey: "",
       activo: true,
     },
   });
 
-  /* ===================== IMÁGENES ===================== */
-  const handleAddImage = (url) => {
-    if (!url) return;
+  const categoriaSeleccionada = watch("categoriaKey");
 
-    if (imagenes.length >= 4) {
-      setImageError("Máximo 4 imágenes por producto");
-      return;
-    }
+  useEffect(() => {
+    const categoria = categories.find(
+      (cat) => cat.key === categoriaSeleccionada,
+    );
 
-    if (imagenes.includes(url)) {
-      setImageError("Esta imagen ya fue agregada");
-      return;
-    }
-
-    setImagenes((prev) => [...prev, url]);
-    setImageError("");
-  };
-
-  const handleRemoveImage = (index) => {
-    setImagenes((prev) => prev.filter((_, i) => i !== index));
-    setImageError("");
-  };
+    setSubcategorias(categoria?.subcategorias || []);
+    setValue("subcategoriaKey", ""); // 👈 CLAVE
+  }, [categoriaSeleccionada, setValue]);
 
   /* ===================== SUBMIT ===================== */
   const onSubmit = async (formData) => {
@@ -61,10 +55,11 @@ const NuevoProducto = () => {
       await addProduct.mutateAsync({
         data: {
           nombre: formData.nombre.trim(),
-          precio: Number(formData.precio),
+          precio: String(formData.precio),
           descripcion: formData.descripcion,
           categoriaKey: formData.categoriaKey,
-          activo: formData.activo,
+          subcategoriaKey: formData.subcategoriaKey,
+          activo: formData.activo ? "true" : "false",
         },
         imagenes,
       });
@@ -74,6 +69,12 @@ const NuevoProducto = () => {
       console.error("❌ Error creando producto:", error);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      imagenes.forEach((file) => URL.revokeObjectURL(file));
+    };
+  }, [imagenes]);
 
   return (
     <section className="max-w-4xl space-y-6">
@@ -189,6 +190,33 @@ const NuevoProducto = () => {
             </p>
           )}
         </div>
+
+        {subcategorias.length > 0 && (
+          <div>
+            <label className="block text-sm text-zinc-300 mb-1">
+              Subcategoría *
+            </label>
+            <select
+              {...register("subcategoriaKey", {
+                required: "La subcategoría es obligatoria",
+              })}
+              className="w-full px-3 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-700"
+            >
+              <option value="">Selecciona una subcategoría</option>
+              {subcategorias.map((sub) => (
+                <option key={sub.key} value={sub.key}>
+                  {sub.nombre}
+                </option>
+              ))}
+            </select>
+
+            {errors.subcategoriaKey && (
+              <p className="text-xs text-red-400 mt-1">
+                {errors.subcategoriaKey.message}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* ===== IMÁGENES ===== */}
         <div>

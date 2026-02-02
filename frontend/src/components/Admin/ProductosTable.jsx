@@ -10,6 +10,7 @@ import {
 import { useProductos } from "../../hooks/queries/useProductos";
 import ProductStatusBadge from "./ProductStatusBadge";
 import ProductActions from "./ProductActions";
+import { formatCLP } from "../../utils/formatPrice";
 
 console.log("BACKEND:", import.meta.env.VITE_BACKEND_URL);
 
@@ -67,7 +68,7 @@ const ProductosTable = () => {
       {
         accessorKey: "precio",
         header: "Precio",
-        cell: ({ getValue }) => `$${Number(getValue() || 0).toLocaleString()}`,
+        cell: ({ getValue }) => formatCLP(getValue()),
       },
       {
         id: "estado",
@@ -131,8 +132,8 @@ const ProductosTable = () => {
   }
 
   return (
-    <div className="rounded-xl border border-zinc-800 overflow-hidden">
-      <div className="flex items-center gap-4 p-4 border-b border-zinc-800">
+    <div className="rounded-xl border border-zinc-800 bg-zinc-900/70">
+      <div className="flex items-center gap-4 p-4 border-b border-zinc-800 relative overflow-x-auto">
         <select
           value={table.getColumn("categoriaKey")?.getFilterValue() ?? ""}
           onChange={(e) =>
@@ -158,42 +159,46 @@ const ProductosTable = () => {
         </select>
       </div>
 
-      {/* 🔹 Tabla */}
-      <table className="w-full text-sm">
-        <thead className="bg-zinc-900 text-zinc-400">
-          {table.getHeaderGroups().map((hg) => (
-            <tr key={hg.id}>
-              {hg.headers.map((header) => (
-                <th key={header.id} className="px-4 py-3 text-left font-medium">
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
+      <div className="overflow-x-auto relative">
+        <table className="min-w-[900px] w-full text-sm">
+          <thead className="bg-zinc-900 text-zinc-400">
+            {table.getHeaderGroups().map((hg) => (
+              <tr key={hg.id}>
+                {hg.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    className="px-4 py-3 text-left font-medium"
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
 
-        <tbody className="divide-y divide-zinc-800">
-          {table.getRowModel().rows.map((row) => (
-            <tr
-              key={row.id}
-              className={`
+          <tbody className="divide-y divide-zinc-800">
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                className={`
     hover:bg-zinc-900/40
     transition
     ${row.getIsSelected() ? "bg-zinc-800/40" : ""}
   `}
-            >
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="px-4 py-3">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="px-4 py-3">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <AnimatePresence>
         {selectedCount > 0 && (

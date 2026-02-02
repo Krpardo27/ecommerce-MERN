@@ -6,7 +6,7 @@ export const useProductos = () => {
     queryKey: ["productos"],
     queryFn: async () => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/productos`
+        `${import.meta.env.VITE_BACKEND_URL}/productos`
       );
       return data;
     },

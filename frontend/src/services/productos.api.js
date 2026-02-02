@@ -9,7 +9,7 @@ export const fetchProductos = async () => {
 
 export const fetchProductoBySlug = async (slug) => {
   const { data } = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/api/productos/slug/${slug}`,
+    `${import.meta.env.VITE_BACKEND_URL}/productos/slug/${slug}`,
   );
   return data;
 };
