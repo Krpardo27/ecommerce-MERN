@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import api from "../../config/axios";
 
 export const useAddProduct = () => {
   const queryClient = useQueryClient();
@@ -9,17 +9,20 @@ export const useAddProduct = () => {
       const formData = new FormData();
 
       Object.entries(data).forEach(([key, value]) => {
-        formData.append(key, value);
+        if (value !== undefined && value !== null) {
+          formData.append(key, value);
+        }
       });
 
       imagenes.forEach((file) => {
         formData.append("imagenes", file);
       });
 
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/admin/add-product`,
-        formData,
-      );
+      const response = await api.post("/admin/add-product", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       return response.data;
     },

@@ -1,7 +1,20 @@
 import axios from "axios";
+console.log(import.meta.env.VITE_BACKEND_URL);
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL + "/api",
+  baseURL: import.meta.env.VITE_BACKEND_URL,
+});
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("AUTH_TOKEN");
+
+  if (token && typeof token === "string") {
+    config.headers.Authorization = `Bearer ${token}`;
+  } else {
+    delete config.headers.Authorization;
+  }
+
+  return config;
 });
 
 export default api;

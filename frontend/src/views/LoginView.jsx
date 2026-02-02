@@ -1,9 +1,9 @@
 import { useForm } from "react-hook-form";
 import { isAxiosError } from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import { useToast } from "../hooks/useToast";
-import api from "../config/axios";
+import api from "../config/axios.js";
 
 const LoginView = () => {
   const initialValues = {
@@ -17,18 +17,23 @@ const LoginView = () => {
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
+  const navigate = useNavigate();
+
   const { showToast } = useToast();
 
   const handleLogin = async (formData) => {
     try {
-      const { data } = await api.post("/auth/login", formData);
-      localStorage.setItem("AUTH_TOKEN ", data);
+      const { data: token } = await api.post("/auth/login", formData);
+
+      localStorage.setItem("AUTH_TOKEN", token);
 
       showToast({
         title: "Inicio de sesión exitoso",
         description: "Has iniciado sesión correctamente.",
         type: "success",
       });
+
+      navigate("/auth/profile", { replace: true });
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         const backendMessage =

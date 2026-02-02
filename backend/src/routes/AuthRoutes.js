@@ -2,10 +2,11 @@ import { Router } from "express";
 import { body } from "express-validator";
 import { handleInputErrores } from "../middleware/validation.js";
 import { createAccount, getUser, login } from "../handlers/Auth.js";
+import { authenticate } from "../middleware/auth.js";
 
 const router = Router();
 
-router.get("/user", getUser);
+router.get("/user", authenticate, getUser);
 
 router.post(
   "/register",
@@ -21,7 +22,6 @@ router.post(
   handleInputErrores,
   createAccount,
 );
-
 router.post(
   "/login",
   body("email").isEmail().withMessage("El email es obligatorio"),

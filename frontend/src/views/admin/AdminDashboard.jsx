@@ -1,11 +1,11 @@
 import React from "react";
 import StatCard from "../../components/Admin/StatCard";
 
-const Dashboard = () => {
+const AdminDashboard = () => {
   return (
     <section className="space-y-6">
       <header>
-        <h1 className="text-2xl font-semibold text-white">Dashboard</h1>
+        <h1 className="text-2xl font-semibold text-white">AdminDashboard</h1>
         <p className="text-sm text-zinc-400">
           Resumen general del e-commerce gamer
         </p>
@@ -20,4 +20,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default AdminDashboard;
