@@ -1,10 +1,18 @@
 import { Router } from "express";
-import { addProduct, adminLogin } from "../handlers/Admin.js";
+import { addProduct, adminLogin, adminProfile } from "../handlers/Admin.js";
 import { authenticateAdmin } from "../middleware/admin.js";
 import { body } from "express-validator";
 import { handleInputErrores } from "../middleware/validation.js";
 
 const router = Router();
+
+router.get("/profile", authenticateAdmin, adminProfile, (req, res) => {
+  res.json({
+    message: "Bienvenido admin",
+    admin: req.admin,
+  });
+});
+router.get("/dashboard", authenticateAdmin, (req, res) => {});
 
 router.post(
   "/login",
@@ -17,12 +25,5 @@ router.post(
 );
 
 router.post("/add-product", authenticateAdmin, addProduct);
-
-router.get("/dashboard", authenticateAdmin, (req, res) => {
-  res.json({
-    message: "Bienvenido admin",
-    admin: req.admin,
-  });
-});
 
 export default router;

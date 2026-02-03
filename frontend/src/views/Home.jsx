@@ -1,18 +1,10 @@
 import { useProductos } from "../hooks/queries/useProductos";
 import ProductGrid from "../components/ProductGrid";
-import Loader from "../components/Loader";
-import { useLoading } from "../hooks/useLoading";
 import { useEffect } from "react";
 import Hero from "../components/Hero";
 
 const Home = () => {
   const { productos, loading, error } = useProductos();
-
-  const { showLoader, hideLoader } = useLoading();
-
-  useEffect(() => {
-    loading ? showLoader() : hideLoader();
-  }, [loading, showLoader, hideLoader]);
 
   if (error) {
     return <p className="text-red-500 px-4">Error: {error}</p>;
@@ -21,7 +13,6 @@ const Home = () => {
   return (
     <section className="max-w-7xl mx-auto px-4 py-10">
       <Hero />
-
       <header className="mb-10 space-y-2 my-10">
         <span
           className="
@@ -32,7 +23,6 @@ const Home = () => {
         >
           Street essentials
         </span>
-
         <h1
           className="
       text-2xl md:text-3xl lg:text-4xl

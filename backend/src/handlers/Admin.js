@@ -122,3 +122,30 @@ export const adminLogin = async (req, res) => {
     },
   });
 };
+
+export const adminProfile = async (req, res) => {
+  try {
+    const { adminId } = req.admin;
+
+    const admin = await Admin.findById(adminId).select("_id name email activo");
+
+    if (!admin || !admin.activo) {
+      return res.status(401).json({
+        message: "Administrador no válido",
+      });
+    }
+
+    return res.json({
+      admin: {
+        id: admin._id,
+        name: admin.name,
+        email: admin.email,
+      },
+    });
+  } catch (error) {
+    console.error("❌ Error en adminProfile:", error);
+    return res.status(500).json({
+      message: "Error al obtener perfil del administrador",
+    });
+  }
+};
