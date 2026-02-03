@@ -80,17 +80,16 @@ export const router = createBrowserRouter([
   {
     path: "admin",
     children: [
-      // 🔓 AUTH
       {
         element: (
           <ToastProvider>
             <AdminAuthLayout />
           </ToastProvider>
         ),
-        children: [{ path: "login", element: <AdminLogin /> }],
+        children: [
+          { path: "login", element: <AdminLogin /> },
+        ],
       },
-
-      // 🔒 PROTECTED (GUARD)
       {
         element: <AdminProtectedRoute />,
         children: [

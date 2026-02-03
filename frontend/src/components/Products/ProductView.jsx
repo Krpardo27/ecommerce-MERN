@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-import { useLoading } from "../../hooks/useLoading";
 import { useProductos } from "../../hooks/queries/useProductos";
 import { useEffect, useMemo } from "react";
 import ProductsControls from "./ProductsControls";
@@ -16,18 +15,12 @@ const ProductView = () => {
     isError: error,
   } = useProductos();
 
-  const { showLoader, hideLoader } = useLoading();
-
   const [params, setParams] = useSearchParams();
 
   const categoria = params.get("categoria");
   const search = params.get("search") || "";
   const page = Number(params.get("page") || 1);
   const limit = params.get("limit") || 12;
-
-  useEffect(() => {
-    loading ? showLoader() : hideLoader();
-  }, [loading, showLoader, hideLoader]);
 
   const productosFiltrados = useMemo(() => {
     if (!Array.isArray(productos)) return [];

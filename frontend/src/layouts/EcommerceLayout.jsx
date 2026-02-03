@@ -1,12 +1,9 @@
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
-import GlobalLoader from "../components/GlobalLoader";
-import { useLoading } from "../hooks/useLoading";
 import Footer from "../components/Footer";
 import Breadcrumbs from "../components/Breadcrumbs";
 
 const EcommerceLayout = () => {
-  const { isLoading } = useLoading();
 
   return (
     <>
@@ -19,7 +16,6 @@ const EcommerceLayout = () => {
       </main>
       <Footer />
 
-      {isLoading && <GlobalLoader />}
     </>
   );
 };

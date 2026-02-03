@@ -1,28 +1,60 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Outlet } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import HeaderAdmin from "../components/Admin/HeaderAdmin";
 import SidebarAdmin from "../components/Admin/SidebarAdmin";
+import FullscreenLoader from "../components/FullscreenLoader";
+import { getAdminProfile } from "../api/admin";
 
 const AdminPanelLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  const justLoggedIn = useMemo(() => {
+    return sessionStorage.getItem("ADMIN_JUST_LOGGED_IN") === "1";
+  }, []);
+
+  const [showLoginLoader, setShowLoginLoader] = useState(justLoggedIn);
+
+  const { isFetching } = useQuery({
+    queryKey: ["admin-auth"],
+    queryFn: getAdminProfile,
+    staleTime: 1000 * 60,
+  });
+
+  useEffect(() => {
+    if (!showLoginLoader) return;
+
+    sessionStorage.removeItem("ADMIN_JUST_LOGGED_IN");
+
+    const id = requestAnimationFrame(() => {
+      setShowLoginLoader(false);
+    });
+
+    return () => cancelAnimationFrame(id);
+  }, [showLoginLoader]);
+
   return (
-    <div className="min-h-screen lg:flex overflow-x-hidden bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 text-zinc-100">
-      {/* Sidebar */}
-      <SidebarAdmin
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
+    <>
+      <FullscreenLoader
+        isVisible={showLoginLoader || (justLoggedIn && isFetching)}
+        label="Cargando panel…"
       />
 
-      {/* Main */}
-      <div className="flex flex-1 flex-col min-w-0">
-        <HeaderAdmin onOpenSidebar={() => setSidebarOpen(true)} />
+      <div className="min-h-screen lg:flex overflow-x-hidden bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 text-zinc-100">
+        <SidebarAdmin
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+        />
 
-        <main className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 bg-black/50">
-          <Outlet />
-        </main>
+        <div className="flex flex-1 flex-col min-w-0">
+          <HeaderAdmin onOpenSidebar={() => setSidebarOpen(true)} />
+
+          <main className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 bg-black/50">
+            <Outlet />
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
