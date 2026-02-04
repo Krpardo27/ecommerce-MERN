@@ -10,18 +10,10 @@ const MIN_LOADING_TIME = 2500; // Tiempo mínimo de carga en ms
 const HeaderAdmin = ({ onOpenSidebar }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  const { showToast } = useToast();
-
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = () => {
     setLoggingOut(true);
-
-    showToast({
-      title: "Sesión cerrada",
-      type: "info", 
-    });
 
     localStorage.removeItem("ADMIN_TOKEN");
     queryClient.removeQueries({ queryKey: ["admin"] });

@@ -30,9 +30,6 @@ const ProductosTable = () => {
   const [columnFilters, setColumnFilters] = useState([]);
   const [sorting, setSorting] = useState([]);
 
-  /* =========================
-     COLUMNS
-  ========================== */
   const columns = useMemo(
     () => [
       {
@@ -57,38 +54,33 @@ const ProductosTable = () => {
         ),
         size: 32,
       },
-
       {
         id: "imagen",
         header: "",
         cell: ({ row }) => (
           <img
-            src={row.original.imagen}
+            src={row.original.imagenes?.[0]}
             alt={row.original.nombre}
             className="w-10 h-10 rounded-lg object-cover"
           />
         ),
         size: 48,
       },
-
       {
         accessorKey: "nombre",
         header: "Producto",
       },
-
       {
         accessorKey: "categoriaKey",
         header: "Categoría",
         cell: ({ getValue }) => CATEGORY_LABELS[getValue()] ?? "Sin categoría",
         filterFn: "equalsString",
       },
-
       {
         accessorKey: "precio",
         header: "Precio",
         cell: ({ getValue }) => formatCLP(getValue()),
       },
-
       {
         accessorKey: "stock",
         header: "Stock",
@@ -96,16 +88,24 @@ const ProductosTable = () => {
           getValue() === 0 ? (
             <span className="text-red-400">Agotado</span>
           ) : (
-            <span className="text-zinc-300">{getValue()}</span>
+            <span>{getValue()}</span>
           ),
       },
-
+      {
+        accessorKey: "precioOferta",
+        header: "Oferta",
+        cell: ({ getValue }) => (getValue ? formatCLP(getValue()) : "—"),
+      },
+      {
+        accessorKey: "destacado",
+        header: "★",
+        cell: ({ getValue }) => (getValue ? "⭐" : ""),
+      },
       {
         id: "estado",
         header: "Estado",
         cell: ({ row }) => <ProductStatusBadge product={row.original} />,
       },
-
       {
         id: "acciones",
         header: "",
@@ -115,9 +115,6 @@ const ProductosTable = () => {
     [],
   );
 
-  /* =========================
-     TABLE
-  ========================== */
   const table = useReactTable({
     data,
     columns,
@@ -136,16 +133,32 @@ const ProductosTable = () => {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  const selectedCount = table.getSelectedRowModel().rows.length;
+  const selectedRows = table.getSelectedRowModel().rows;
+  const selectedIds = selectedRows.map((row) => row.original._id);
+
+  const selectedCount = selectedRows.length;
+
+  const bulkActivate = () => {
+    console.log("Activar:", selectedIds);
+  };
+
+  const bulkDeactivate = () => {
+    console.log("Desactivar:", selectedIds);
+  };
+
+  const bulkHighlight = () => {
+    console.log("Destacar:", selectedIds);
+  };
+
+  const bulkDelete = () => {
+    console.log("Eliminar:", selectedIds);
+  };
 
   const categoriasUnicas = useMemo(
     () => [...new Set(data.map((p) => p.categoriaKey).filter(Boolean))],
     [data],
   );
 
-  /* =========================
-     STATES
-  ========================== */
   if (isLoading)
     return <p className="text-zinc-400 text-sm">Cargando productos…</p>;
 
@@ -164,12 +177,8 @@ const ProductosTable = () => {
       </div>
     );
 
-  /* =========================
-     RENDER
-  ========================== */
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/70">
-      {/* ===== Filters ===== */}
       <div className="flex flex-wrap gap-3 p-4 border-b border-zinc-800">
         <input
           type="text"
@@ -270,31 +279,70 @@ const ProductosTable = () => {
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
-            className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 flex gap-4 items-center"
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="
+        fixed bottom-5 left-1/2 -translate-x-1/2 z-50
+        bg-zinc-900 border border-zinc-800
+        rounded-2xl shadow-2xl
+        px-4 py-3
+        flex flex-wrap items-center gap-2
+      "
           >
-            <span className="text-sm text-white font-semibold">
-              {selectedCount} seleccionados
+            {/* INFO */}
+            <span className="text-sm font-semibold text-white mr-2">
+              {selectedCount} seleccionado{selectedCount !== 1 && "s"}
             </span>
 
+            {/* PRIMARY ACTIONS */}
             <button
-              onClick={() => table.resetRowSelection()}
-              className="p-1 rounded-full hover:bg-zinc-800"
+              onClick={bulkActivate}
+              className="px-3 py-2 rounded-xl text-xs font-semibold
+                   bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
             >
-              <FiX />
+              Activar
             </button>
 
             <button
+              onClick={bulkDeactivate}
+              className="px-3 py-2 rounded-xl text-xs font-semibold
+                   bg-zinc-800 text-zinc-200 hover:bg-zinc-700"
+            >
+              Desactivar
+            </button>
+
+            <button
+              onClick={bulkHighlight}
+              className="px-3 py-2 rounded-xl text-xs font-semibold
+                   bg-amber-500/20 text-amber-300 hover:bg-amber-500/30"
+            >
+              Destacar
+            </button>
+
+            {/* SECONDARY */}
+            <button
               onClick={() => console.log(table.getSelectedRowModel().rows)}
-              className="px-3 py-2 rounded-xl text-xs bg-zinc-800 text-zinc-200"
+              className="px-3 py-2 rounded-xl text-xs
+                   bg-zinc-800 text-zinc-300 hover:bg-zinc-700"
             >
               Exportar
             </button>
 
+            {/* DANGER */}
             <button
-              onClick={() => alert("Eliminar productos")}
-              className="px-3 py-2 rounded-xl text-xs bg-red-500/20 text-red-300"
+              onClick={bulkDelete}
+              className="px-3 py-2 rounded-xl text-xs font-semibold
+                   bg-red-500/20 text-red-300 hover:bg-red-500/30"
             >
-              <FiTrash2 />
+              Eliminar
+            </button>
+
+            {/* RESET */}
+            <button
+              onClick={() => table.resetRowSelection()}
+              className="ml-auto p-2 rounded-full hover:bg-zinc-800"
+              title="Cancelar selección"
+            >
+              <FiX />
             </button>
           </motion.div>
         )}

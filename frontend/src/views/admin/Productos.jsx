@@ -10,17 +10,6 @@ const Productos = () => {
             Gestión del catálogo del e-commerce
           </p>
         </div>
-
-        <button
-          className="
-            px-4 py-2 rounded-lg
-            bg-indigo-600 hover:bg-indigo-500
-            text-sm font-medium text-white
-            transition
-          "
-        >
-          + Nuevo producto
-        </button>
       </header>
 
       <ProductosTable />

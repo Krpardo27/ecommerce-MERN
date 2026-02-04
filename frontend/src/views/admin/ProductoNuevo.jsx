@@ -26,10 +26,16 @@ const NuevoProducto = () => {
     defaultValues: {
       nombre: "",
       precio: "",
+      precioOferta: "",
+      stock: 50,
+      sku: "",
+      marca: "",
+      tags: "",
       descripcion: "",
       categoriaKey: "",
       subcategoriaKey: "",
       activo: true,
+      destacado: false,
     },
   });
 
@@ -55,11 +61,21 @@ const NuevoProducto = () => {
       await addProduct.mutateAsync({
         data: {
           nombre: formData.nombre.trim(),
-          precio: String(formData.precio),
+          precio: Number(formData.precio),
+          precioOferta: formData.precioOferta
+            ? Number(formData.precioOferta)
+            : undefined,
+          stock: Number(formData.stock),
+          sku: formData.sku || undefined,
+          marca: formData.marca || undefined,
+          tags: formData.tags
+            ? formData.tags.split(",").map((t) => t.trim())
+            : [],
           descripcion: formData.descripcion,
           categoriaKey: formData.categoriaKey,
           subcategoriaKey: formData.subcategoriaKey,
-          activo: formData.activo ? "true" : "false",
+          activo: formData.activo,
+          destacado: formData.destacado,
         },
         imagenes,
       });
@@ -267,6 +283,59 @@ const NuevoProducto = () => {
               ))}
             </div>
           )}
+        </div>
+
+        <div>
+          <label className="block text-sm text-zinc-300 mb-1">
+            Stock inicial *
+          </label>
+          <input
+            type="number"
+            {...register("stock", {
+              required: "El stock es obligatorio",
+              min: { value: 0, message: "No puede ser negativo" },
+            })}
+            className="input"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm text-zinc-300 mb-1">SKU</label>
+          <input {...register("sku")} className="input" />
+        </div>
+
+        <div>
+          <label className="block text-sm text-zinc-300 mb-1">Marca</label>
+          <input {...register("marca")} className="input" />
+        </div>
+        <div>
+          <label className="block text-sm text-zinc-300 mb-1">
+            Precio oferta
+          </label>
+          <input
+            type="number"
+            {...register("precioOferta", {
+              validate: (value) =>
+                !value ||
+                Number(value) < Number(watch("precio")) ||
+                "Debe ser menor al precio normal",
+            })}
+            className="input"
+          />
+        </div>
+        <div className="flex items-center gap-3">
+          <input type="checkbox" {...register("destacado")} />
+          <span className="text-sm text-zinc-300">Producto destacado</span>
+        </div>
+        <div>
+          <label className="block text-sm text-zinc-300 mb-1">
+            Tags (separados por coma)
+          </label>
+          <input
+            {...register("tags")}
+            placeholder="ram, gaming, corsair"
+            className="input"
+          />
         </div>
 
         {/* ===== ACTIVO ===== */}

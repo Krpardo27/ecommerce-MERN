@@ -2,76 +2,27 @@ import mongoose from "mongoose";
 
 const productosSchema = new mongoose.Schema(
   {
-    nombre: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+    nombre: String,
+    slug: { type: String, unique: true },
+    precio: Number,
+    precioOferta: Number,
 
-    slug: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      index: true,
-    },
+    stock: { type: Number, default: 0, min: 0 },
+    sku: { type: String, unique: true, sparse: true },
+    marca: { type: String, index: true },
 
-    precio: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
+    tags: { type: [String], index: true },
+    destacado: { type: Boolean, default: false },
 
-    descripcion: {
-      type: String,
-      default: "",
-    },
+    categoriaKey: String,
+    subcategoriaKey: String,
 
-    categoriaKey: {
-      type: String,
-      required: true,
-      enum: [
-        "perifericos",
-        "componentes-pc",
-        "audio-gamer",
-        "sillas-gamer",
-        "streaming",
-      ],
-      index: true,
-    },
+    imagenes: [String],
+    descripcion: String,
 
-    subcategoriaKey: {
-      type: String,
-      required: true,
-      index: true,
-    },
-
-    imagenes: {
-      type: [String],
-      required: true,
-      validate: {
-        validator: (arr) =>
-          Array.isArray(arr) && arr.length >= 1 && arr.length <= 4,
-        message: "Debe contener entre 1 y 4 imágenes",
-      },
-    },
-    
-    stock: {
-      type: Number,
-      required: true,
-      min: 0,
-      default: 0,
-    },
-
-    activo: {
-      type: Boolean,
-      default: true,
-      index: true,
-    },
+    activo: { type: Boolean, default: true },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 );
 
 export default mongoose.model("Producto", productosSchema, "productos");
