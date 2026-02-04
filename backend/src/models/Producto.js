@@ -2,32 +2,24 @@ import mongoose from "mongoose";
 
 const productosSchema = new mongoose.Schema(
   {
-    nombre: { type: String, required: true, trim: true },
-    slug: { type: String, required: true, unique: true, lowercase: true },
-    precio: { type: Number, required: true, min: 0 },
-    descripcion: { type: String, default: "" },
-    categoriaKey: {
-      type: String,
-      required: true,
-      enum: [
-        "perifericos",
-        "componentes-pc",
-        "audio-gamer",
-        "sillas-gamer",
-        "streaming",
-      ],
-    },
-    subcategoriaKey: {
-      type: String,
-      required: true,
-      index: true,
-    },
-    imagenes: {
-      type: [String],
-      validate: {
-        validator: (arr) => arr.length >= 1 && arr.length <= 4,
-      },
-    },
+    nombre: String,
+    slug: { type: String, unique: true },
+    precio: Number,
+    precioOferta: Number,
+
+    stock: { type: Number, default: 0, min: 0 },
+    sku: { type: String, unique: true, sparse: true },
+    marca: { type: String, index: true },
+
+    tags: { type: [String], index: true },
+    destacado: { type: Boolean, default: false },
+
+    categoriaKey: String,
+    subcategoriaKey: String,
+
+    imagenes: [String],
+    descripcion: String,
+
     activo: { type: Boolean, default: true },
   },
   { timestamps: true },

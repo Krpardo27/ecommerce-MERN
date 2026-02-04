@@ -1,27 +1,30 @@
 import { useState } from "react";
 import { FiBox, FiLogOut, FiMenu, FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import FullscreenLoader from "../FullscreenLoader";
+import { useToast } from "../../hooks/useToast";
+
+const MIN_LOADING_TIME = 2500; // Tiempo mínimo de carga en ms
 
 const HeaderAdmin = ({ onOpenSidebar }) => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = () => {
     setLoggingOut(true);
 
-    // pequeño delay para UX
-    setTimeout(() => {
-      // 🔑 limpiar sesión admin
-      localStorage.removeItem("ADMIN_TOKEN");
+    localStorage.removeItem("ADMIN_TOKEN");
+    queryClient.removeQueries({ queryKey: ["admin"] });
 
+    setTimeout(() => {
       navigate("/admin/login", { replace: true });
-    }, 400);
+    }, MIN_LOADING_TIME);
   };
 
   return (
     <>
-      {/* 🔥 Loader de logout */}
       <FullscreenLoader isVisible={loggingOut} label="Cerrando sesión…" />
 
       <header className="sticky top-0 z-30 h-16 bg-zinc-950/70 backdrop-blur border-b border-zinc-800/70">

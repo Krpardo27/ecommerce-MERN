@@ -22,56 +22,63 @@ export const addProduct = async (req, res) => {
         return res.status(400).json({ message: "Error al procesar imágenes" });
       }
 
-      const getField = (value) => (Array.isArray(value) ? value[0] : value);
+      const getField = (v) => (Array.isArray(v) ? v[0] : v);
 
       const nombre = getField(fields.nombre);
-      const precio = getField(fields.precio);
+      const precioRaw = getField(fields.precio);
+      const stockRaw = getField(fields.stock);
       const descripcion = getField(fields.descripcion);
       const categoriaKey = getField(fields.categoriaKey);
       const subcategoriaKey = getField(fields.subcategoriaKey);
-      const activo = getField(fields.activo ?? "true");
+      const activoRaw = getField(fields.activo ?? "true");
 
-      if (!nombre || typeof nombre !== "string") {
-        return res.status(400).json({
-          message: "Nombre del producto es obligatorio",
-        });
+      if (!nombre) {
+        return res.status(400).json({ message: "Nombre obligatorio" });
       }
+
+      const precio = Number(precioRaw);
+      const stock = Number.isFinite(Number(stockRaw)) ? Number(stockRaw) : 0;
+      const activo = activoRaw === "true";
+
+      console.log("STOCK RAW:", stockRaw);
+      console.log("STOCK PARSED:", stock);
 
       const images = Array.isArray(files.imagenes)
         ? files.imagenes
         : [files.imagenes].filter(Boolean);
 
       if (!images.length) {
-        return res.status(400).json({
-          message: "No se recibieron imágenes",
-        });
+        return res.status(400).json({ message: "No se recibieron imágenes" });
       }
 
       const folder = `productos/${categoriaKey}/${subcategoriaKey}`;
-      const imageUrls = [];
-
-      for (const img of images) {
-        const result = await cloudinary.uploader.upload(img.filepath, {
-          folder,
-          public_id: `${slugify(nombre, { lower: true })}-${uuidv4()}`,
-          resource_type: "image",
-        });
-
-        imageUrls.push(result.secure_url);
-        fs.unlinkSync(img.filepath);
-      }
-
       const slug = slugify(nombre, { lower: true, strict: true });
+
+      const imageUrls = await Promise.all(
+        images.map(async (img) => {
+          try {
+            const result = await cloudinary.uploader.upload(img.filepath, {
+              folder,
+              public_id: `${slug}-${uuidv4()}`,
+              resource_type: "image",
+            });
+            return result.secure_url;
+          } finally {
+            fs.unlinkSync(img.filepath);
+          }
+        }),
+      );
 
       const producto = await Producto.create({
         nombre,
         slug,
-        precio: Number(precio),
+        precio,
+        stock,
         descripcion,
         categoriaKey,
         subcategoriaKey,
         imagenes: imageUrls,
-        activo: activo === "true",
+        activo,
       });
 
       return res.status(201).json({
@@ -81,9 +88,7 @@ export const addProduct = async (req, res) => {
     });
   } catch (error) {
     console.error("❌ addProduct error:", error);
-    return res.status(500).json({
-      message: "Error al crear el producto",
-    });
+    return res.status(500).json({ message: "Error al crear el producto" });
   }
 };
 
