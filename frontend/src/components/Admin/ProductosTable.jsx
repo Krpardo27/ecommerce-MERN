@@ -5,20 +5,34 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import { useProductos } from "../../hooks/queries/useProductos";
 import ProductStatusBadge from "./ProductStatusBadge";
 import ProductActions from "./ProductActions";
 import { formatCLP } from "../../utils/formatPrice";
 
-console.log("BACKEND:", import.meta.env.VITE_BACKEND_URL);
+const CATEGORY_LABELS = {
+  perifericos: "Periféricos",
+  "componentes-pc": "Componentes PC",
+  "audio-gamer": "Audio Gamer",
+  "sillas-gamer": "Sillas Gamer",
+  streaming: "Streaming",
+};
 
 const ProductosTable = () => {
   const { data = [], isLoading, isError } = useProductos();
+
   const [rowSelection, setRowSelection] = useState({});
   const [columnFilters, setColumnFilters] = useState([]);
+  const [sorting, setSorting] = useState([]);
 
+  /* =========================
+     COLUMNS
+  ========================== */
   const columns = useMemo(
     () => [
       {
@@ -38,7 +52,6 @@ const ProductosTable = () => {
           <input
             type="checkbox"
             checked={row.getIsSelected()}
-            disabled={!row.getCanSelect()}
             onChange={row.getToggleSelectedHandler()}
           />
         ),
@@ -46,35 +59,53 @@ const ProductosTable = () => {
       },
 
       {
+        id: "imagen",
+        header: "",
+        cell: ({ row }) => (
+          <img
+            src={row.original.imagen}
+            alt={row.original.nombre}
+            className="w-10 h-10 rounded-lg object-cover"
+          />
+        ),
+        size: 48,
+      },
+
+      {
         accessorKey: "nombre",
         header: "Producto",
       },
+
       {
         accessorKey: "categoriaKey",
         header: "Categoría",
-        cell: ({ getValue }) => {
-          const map = {
-            perifericos: "Periféricos",
-            "componentes-pc": "Componentes PC",
-            "audio-gamer": "Audio Gamer",
-            "sillas-gamer": "Sillas Gamer",
-            streaming: "Streaming",
-          };
-
-          return map[getValue()] ?? "Sin categoría";
-        },
+        cell: ({ getValue }) => CATEGORY_LABELS[getValue()] ?? "Sin categoría",
         filterFn: "equalsString",
       },
+
       {
         accessorKey: "precio",
         header: "Precio",
         cell: ({ getValue }) => formatCLP(getValue()),
       },
+
+      {
+        accessorKey: "stock",
+        header: "Stock",
+        cell: ({ getValue }) =>
+          getValue() === 0 ? (
+            <span className="text-red-400">Agotado</span>
+          ) : (
+            <span className="text-zinc-300">{getValue()}</span>
+          ),
+      },
+
       {
         id: "estado",
         header: "Estado",
         cell: ({ row }) => <ProductStatusBadge product={row.original} />,
       },
+
       {
         id: "acciones",
         header: "",
@@ -84,56 +115,72 @@ const ProductosTable = () => {
     [],
   );
 
+  /* =========================
+     TABLE
+  ========================== */
   const table = useReactTable({
     data,
     columns,
     state: {
-      columnFilters,
       rowSelection,
+      columnFilters,
+      sorting,
     },
-    onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
+    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: setSorting,
     enableRowSelection: true,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
-  const safeData = useMemo(() => (Array.isArray(data) ? data : []), [data]);
+  const selectedCount = table.getSelectedRowModel().rows.length;
 
-  const categoriasUnicas = useMemo(() => {
-    return [...new Set(safeData.map((p) => p?.categoriaKey).filter(Boolean))];
-  }, [safeData]);
+  const categoriasUnicas = useMemo(
+    () => [...new Set(data.map((p) => p.categoriaKey).filter(Boolean))],
+    [data],
+  );
 
-  const selectedRows = table.getSelectedRowModel().rows;
-  const selectedCount = selectedRows.length;
+  /* =========================
+     STATES
+  ========================== */
+  if (isLoading)
+    return <p className="text-zinc-400 text-sm">Cargando productos…</p>;
 
-  const CATEGORY_LABELS = {
-    perifericos: "Periféricos",
-    "componentes-pc": "Componentes PC",
-    "audio-gamer": "Audio Gamer",
-    "sillas-gamer": "Sillas Gamer",
-    streaming: "Streaming",
-  };
+  if (isError)
+    return <p className="text-red-400 text-sm">Error al cargar productos</p>;
 
-  if (isLoading) {
-    return <div className="text-zinc-400 text-sm">Cargando productos…</div>;
-  }
-
-  if (isError) {
+  if (!data.length)
     return (
-      <div className="text-red-400 text-sm">Error al cargar productos</div>
+      <div className="text-center p-10 text-zinc-400">
+        <p className="text-lg font-semibold text-white">
+          Aún no tienes productos
+        </p>
+        <p className="text-sm mt-2">
+          Crea tu primer producto para empezar a vender.
+        </p>
+      </div>
     );
-  }
 
-  if (!data.length) {
-    return (
-      <div className="text-zinc-400 text-sm">No hay productos registrados</div>
-    );
-  }
-
+  /* =========================
+     RENDER
+  ========================== */
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900/70">
-      <div className="flex items-center gap-4 p-4 border-b border-zinc-800 relative overflow-x-auto">
+      {/* ===== Filters ===== */}
+      <div className="flex flex-wrap gap-3 p-4 border-b border-zinc-800">
+        <input
+          type="text"
+          placeholder="Buscar producto…"
+          value={table.getColumn("nombre")?.getFilterValue() ?? ""}
+          onChange={(e) =>
+            table.getColumn("nombre")?.setFilterValue(e.target.value)
+          }
+          className="px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-sm text-zinc-200 w-full sm:w-[260px]"
+        />
+
         <select
           value={table.getColumn("categoriaKey")?.getFilterValue() ?? ""}
           onChange={(e) =>
@@ -141,16 +188,9 @@ const ProductosTable = () => {
               .getColumn("categoriaKey")
               ?.setFilterValue(e.target.value || undefined)
           }
-          className="
-            px-3 py-2
-            rounded-lg
-            bg-zinc-900
-            border border-zinc-800
-            text-sm text-zinc-200
-          "
+          className="px-3 py-2 rounded-lg bg-zinc-900 border border-zinc-800 text-sm text-zinc-200"
         >
           <option value="">Todas las categorías</option>
-
           {categoriasUnicas.map((cat) => (
             <option key={cat} value={cat}>
               {CATEGORY_LABELS[cat] ?? cat}
@@ -159,15 +199,17 @@ const ProductosTable = () => {
         </select>
       </div>
 
-      <div className="overflow-x-auto relative">
-        <table className="min-w-[900px] w-full text-sm">
+      {/* ===== Table ===== */}
+      <div className="overflow-x-auto">
+        <table className="min-w-[1100px] w-full text-sm">
           <thead className="bg-zinc-900 text-zinc-400">
             {table.getHeaderGroups().map((hg) => (
               <tr key={hg.id}>
                 {hg.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-4 py-3 text-left font-medium"
+                    className="px-4 py-3 text-left font-medium cursor-pointer select-none"
+                    onClick={header.column.getToggleSortingHandler()}
                   >
                     {flexRender(
                       header.column.columnDef.header,
@@ -183,11 +225,9 @@ const ProductosTable = () => {
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className={`
-    hover:bg-zinc-900/40
-    transition
-    ${row.getIsSelected() ? "bg-zinc-800/40" : ""}
-  `}
+                className={`hover:bg-zinc-900/40 transition ${
+                  row.getIsSelected() ? "bg-zinc-800/40" : ""
+                }`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="px-4 py-3">
@@ -200,71 +240,62 @@ const ProductosTable = () => {
         </table>
       </div>
 
+      {/* ===== Pagination ===== */}
+      <div className="flex items-center justify-between p-4 text-sm text-zinc-400">
+        <span>
+          Página {table.getState().pagination.pageIndex + 1} de{" "}
+          {table.getPageCount()}
+        </span>
+
+        <div className="flex gap-2">
+          <button
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Anterior
+          </button>
+          <button
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Siguiente
+          </button>
+        </div>
+      </div>
+
+      {/* ===== Bulk Actions ===== */}
       <AnimatePresence>
         {selectedCount > 0 && (
           <motion.div
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="
-        fixed bottom-5 left-1/2 -translate-x-1/2 z-50
-        bg-zinc-900 text-zinc-400 backdrop-blur-xl
-        border border-zinc-800
-        shadow-2xl
-        rounded-2xl
-        w-[95vw] max-w-4xl
-        px-4 py-3
-        flex flex-col sm:flex-row sm:items-center
-        gap-4 sm:gap-6
-      "
+            className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-zinc-900 border border-zinc-800 rounded-2xl px-4 py-3 flex gap-4 items-center"
           >
-            {/* ===== INFO ===== */}
-            <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
-              <span className="text-sm font-bold text-white">
-                {selectedCount} producto{selectedCount !== 1 && "s"}{" "}
-                seleccionado
-                {selectedCount !== 1 && "s"}
-              </span>
+            <span className="text-sm text-white font-semibold">
+              {selectedCount} seleccionados
+            </span>
 
-              <button
-                onClick={() => table.resetRowSelection()}
-                className="p-1 rounded-full hover:bg-gray-100"
-                title="Cancelar selección"
-              >
-                <FiX />
-              </button>
-            </div>
+            <button
+              onClick={() => table.resetRowSelection()}
+              className="p-1 rounded-full hover:bg-zinc-800"
+            >
+              <FiX />
+            </button>
 
-            <div className="hidden sm:block h-6 w-px bg-gray-300" />
+            <button
+              onClick={() => console.log(table.getSelectedRowModel().rows)}
+              className="px-3 py-2 rounded-xl text-xs bg-zinc-800 text-zinc-200"
+            >
+              Exportar
+            </button>
 
-            {/* ===== ACTIONS ===== */}
-            <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3 w-full sm:w-auto">
-              <button
-                onClick={() => console.log(selectedRows)}
-                className="
-            px-3 py-2 rounded-xl text-xs font-semibold
-            flex items-center justify-center gap-2
-            bg-gray-100 text-gray-700 hover:bg-gray-200
-            transition
-          "
-              >
-                Exportar
-              </button>
-
-              <button
-                onClick={() => alert("Eliminar productos")}
-                className="
-            px-3 py-2 rounded-xl text-xs font-semibold
-            flex items-center justify-center gap-2
-            bg-red-100 text-red-700 hover:bg-red-200
-            transition
-          "
-              >
-                <FiTrash2 />
-                Eliminar
-              </button>
-            </div>
+            <button
+              onClick={() => alert("Eliminar productos")}
+              className="px-3 py-2 rounded-xl text-xs bg-red-500/20 text-red-300"
+            >
+              <FiTrash2 />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

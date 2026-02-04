@@ -17,13 +17,12 @@ const AdminLogin = () => {
     defaultValues: { email: "", password: "" },
   });
 
-  // 🔥 loader controlado aquí
   const [loggingIn, setLoggingIn] = useState(false);
 
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  const MIN_LOADING_TIME = 800; 
+  const MIN_LOADING_TIME = 2500;
 
   const handleLogin = async (formData) => {
     setLoggingIn(true);
