@@ -41,7 +41,13 @@ const SidebarAdmin = ({ isOpen, onClose }) => {
         )}
       >
         {/* Header */}
-        <div className="h-16 px-5 border-b border-zinc-800/70 flex items-center justify-between">
+        <div
+          className="sticky top-0 z-10
+    h-16 px-5
+    bg-zinc-950
+    border-b border-zinc-800/70
+    flex items-center justify-between"
+        >
           <div className="flex flex-col leading-tight">
             <span className="text-sm text-zinc-400">Admin Panel</span>
             <span className="text-lg font-semibold tracking-tight">
