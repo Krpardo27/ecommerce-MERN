@@ -1,25 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import HeaderAdmin from "../components/Admin/HeaderAdmin";
 import SidebarAdmin from "../components/Admin/SidebarAdmin";
 import FullscreenLoader from "../components/FullscreenLoader";
-import { getAdminProfile } from "../api/admin";
+import { useMe } from "../hooks/queries/useMe";
 
 const AdminPanelLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const justLoggedIn = useMemo(() => {
-    return sessionStorage.getItem("ADMIN_JUST_LOGGED_IN") === "1";
-  }, []);
+  /* ===== Detectar login reciente ===== */
+  const justLoggedIn = useMemo(
+    () => sessionStorage.getItem("ADMIN_JUST_LOGGED_IN") === "1",
+    [],
+  );
 
   const [showLoginLoader, setShowLoginLoader] = useState(justLoggedIn);
 
-  const { isFetching } = useQuery({
-    queryKey: ["admin-auth"],
-    queryFn: getAdminProfile,
-    staleTime: 1000 * 60,
-  });
+  /* ===== Auth check ===== */
+  const { isFetching } = useMe();
 
   useEffect(() => {
     if (!showLoginLoader) return;
@@ -47,12 +45,10 @@ const AdminPanelLayout = () => {
           onClose={() => setSidebarOpen(false)}
         />
 
-        {/* MAIN WRAPPER */}
+        {/* MAIN */}
         <div className="flex flex-1 flex-col min-w-0">
-          {/* HEADER */}
           <HeaderAdmin onOpenSidebar={() => setSidebarOpen(true)} />
 
-          {/* SCROLL AREA */}
           <main className="flex-1 overflow-y-auto px-4 lg:px-6 py-6 bg-black/50">
             <Outlet />
           </main>

@@ -6,6 +6,7 @@ import { router } from "./router";
 import { CartProvider } from "./context/CartContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ToastProvider } from "./context/ToastContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,10 +21,12 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-        <CartProvider>
+      <CartProvider>
+        <ToastProvider swipeDirection="right">
           <RouterProvider router={router} />
           <ReactQueryDevtools initialIsOpen={false} />
-        </CartProvider>
+        </ToastProvider>
+      </CartProvider>
     </QueryClientProvider>
   </StrictMode>,
 );

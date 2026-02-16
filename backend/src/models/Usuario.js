@@ -6,20 +6,30 @@ const usuarioSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      minlength: 3,
     },
+
     email: {
       type: String,
       required: true,
       unique: true,
-      match: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      lowercase: true,
       trim: true,
     },
+
     password: {
       type: String,
       required: true,
-      minlength: 8,
-      trim: true,
+    },
+
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+
+    activo: {
+      type: Boolean,
+      default: true,
     },
   },
   { timestamps: true },

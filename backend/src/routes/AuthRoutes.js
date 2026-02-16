@@ -6,7 +6,7 @@ import { authenticate } from "../middleware/auth.js";
 
 const router = Router();
 
-router.get("/user", authenticate, getUser);
+router.get("/me", authenticate, getUser);
 
 router.post(
   "/register",

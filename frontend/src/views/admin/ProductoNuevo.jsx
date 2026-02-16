@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FiArrowLeft, FiSave, FiStar, FiX } from "react-icons/fi";
 import { useAddProduct } from "../../hooks/mutations/useAddProduct";
 import { categories } from "../../data/categories";
@@ -8,26 +8,26 @@ import { useToast } from "../../hooks/useToast";
 import { useEffect } from "react";
 import { formatCLP } from "../../utils/formatPrice";
 import FullscreenLoader from "../../components/FullscreenLoader";
+import { useProducto } from "../../hooks/queries/useProducto";
+import { useUpdateProduct } from "../../hooks/mutations/useUpdateProduct";
+import getPreviewSrc from "../../utils/getPreviewSrc";
 
-const NuevoProducto = () => {
+const ProductoNuevo = ({ initialData, isEdit = false }) => {
   const navigate = useNavigate();
   const addProduct = useAddProduct();
 
-  const { showToast } = useToast();
+  const [params] = useSearchParams();
+  const duplicateId = params.get("duplicate");
 
-  const [creating, setCreating] = useState(false);
-
-  const [imagenes, setImagenes] = useState([]);
-  const [imageError, setImageError] = useState("");
-
-  const [subcategorias, setSubcategorias] = useState([]);
-
-  const [descuentoManual, setDescuentoManual] = useState("");
+  const { data: productoDuplicado } = useProducto(duplicateId, {
+    enabled: !!duplicateId,
+  });
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     setValue,
     formState: { errors },
   } = useForm({
@@ -46,6 +46,44 @@ const NuevoProducto = () => {
       destacado: false,
     },
   });
+
+  useEffect(() => {
+    if (!initialData) return;
+
+    console.log("📦 cargando producto:", initialData);
+
+    reset({
+      nombre: initialData.nombre ?? "",
+      precio: initialData.precio ?? "",
+      precioOferta: initialData.precioOferta ?? "",
+      stock: initialData.stock ?? 50,
+      sku: initialData.sku ?? "",
+      marca: initialData.marca ?? "",
+      tags: initialData.tags?.join(", ") ?? "",
+      descripcion: initialData.descripcion ?? "",
+      categoriaKey: initialData.categoriaKey ?? "",
+      subcategoriaKey: initialData.subcategoriaKey ?? "",
+      activo: initialData.activo ?? true,
+      destacado: initialData.destacado ?? false,
+    });
+
+    if (initialData.imagenes?.length) {
+      setImagenes(initialData.imagenes);
+    }
+  }, [initialData, reset]);
+
+  const updateProduct = useUpdateProduct();
+
+  const { showToast } = useToast();
+
+  const [creating, setCreating] = useState(false);
+
+  const [imagenes, setImagenes] = useState([]);
+  const [imageError, setImageError] = useState("");
+
+  const [subcategorias, setSubcategorias] = useState([]);
+
+  const [descuentoManual, setDescuentoManual] = useState("");
 
   const categoriaSeleccionada = watch("categoriaKey");
 
@@ -67,6 +105,8 @@ const NuevoProducto = () => {
   }, [categoriaSeleccionada, setValue]);
 
   const onSubmit = async (formData) => {
+    const isDuplicating = !!duplicateId;
+
     if (imagenes.length < 1 || imagenes.length > 4) {
       setImageError("Debes agregar entre 1 y 4 imágenes");
       return;
@@ -75,48 +115,57 @@ const NuevoProducto = () => {
     setCreating(true);
 
     showToast({
-      title: "Creando producto",
-      description: "Subiendo imágenes y guardando información…",
+      title: isEdit ? "Actualizando producto…" : "Creando producto…",
+      description: "Subiendo imágenes y guardando información",
       type: "loading",
     });
 
     try {
-      await addProduct.mutateAsync({
+      if (isEdit) {
+        await updateProduct.mutateAsync({
+          id: initialData._id,
+          data: {
+            ...formData,
+            precio: Number(formData.precio),
+            precioOferta: formData.precioOferta
+              ? Number(formData.precioOferta)
+              : undefined,
+            stock: Number(formData.stock),
+          },
+          imagenes,
+        });
+
+        showToast({ title: "Producto actualizado", type: "success" });
+        return;
+      }
+
+      // CREATE
+      const nuevoProducto = await addProduct.mutateAsync({
         data: {
+          ...formData,
           nombre: formData.nombre.trim(),
           precio: Number(formData.precio),
           precioOferta: formData.precioOferta
             ? Number(formData.precioOferta)
             : undefined,
           stock: Number(formData.stock),
-          sku: formData.sku || undefined,
-          marca: formData.marca || undefined,
           tags: formData.tags
             ? formData.tags.split(",").map((t) => t.trim())
             : [],
-          descripcion: formData.descripcion,
-          categoriaKey: formData.categoriaKey,
-          subcategoriaKey: formData.subcategoriaKey,
-          activo: formData.activo,
-          destacado: formData.destacado,
         },
         imagenes,
       });
 
       showToast({
-        title: "Producto creado",
-        description: "El producto fue creado correctamente",
+        title: isDuplicating ? "Producto duplicado" : "Producto creado",
         type: "success",
       });
 
       navigate("/admin/productos");
     } catch (error) {
-      console.error("❌ Error creando producto:", error);
-
       showToast({
-        title: "Error al crear producto",
-        description:
-          error.response?.data?.message || "Ocurrió un error inesperado",
+        title: "Error",
+        description: error.response?.data?.message || "Error inesperado",
         type: "error",
       });
     } finally {
@@ -125,8 +174,21 @@ const NuevoProducto = () => {
   };
 
   useEffect(() => {
+    if (!initialData) return;
+
+    Object.entries(initialData).forEach(([k, v]) => {
+      if (["_id", "imagenes", "createdAt", "updatedAt"].includes(k)) return;
+      setValue(k, v);
+    });
+  }, [initialData]);
+
+  useEffect(() => {
     return () => {
-      imagenes.forEach((file) => URL.revokeObjectURL(file));
+      imagenes.forEach((img) => {
+        if (img instanceof File || img instanceof Blob) {
+          URL.revokeObjectURL(img);
+        }
+      });
     };
   }, [imagenes]);
 
@@ -144,13 +206,33 @@ const NuevoProducto = () => {
     setValue("precioOferta", nuevoPrecioOferta);
   }, [descuentoManual, watch("precio")]);
 
+  useEffect(() => {
+    if (!productoDuplicado) return;
+
+    const clean = {
+      ...productoDuplicado,
+      nombre: productoDuplicado.nombre + " copia",
+      sku: "",
+      stock: productoDuplicado.stock ?? 50,
+    };
+
+    Object.entries(clean).forEach(([k, v]) => {
+      if (["_id", "imagenes", "createdAt", "updatedAt"].includes(k)) return;
+      setValue(k, v);
+    });
+
+    setImagenes([]); // opcional
+  }, [productoDuplicado, setValue]);
+
   return (
     <>
       <FullscreenLoader isVisible={creating} label="Creando producto…" />
 
       <header className="flex items-center justify-between">
         <div className="flex flex-col py-6">
-          <h1 className="text-2xl font-semibold text-white">Nuevo producto</h1>
+          <h1 className="text-2xl font-semibold text-white">
+            {isEdit ? "Editar producto" : "Nuevo producto"}
+          </h1>
           <p className="text-sm text-zinc-400">
             Crear un producto para el catálogo
           </p>
@@ -247,7 +329,7 @@ const NuevoProducto = () => {
                       {imagenes.map((file, idx) => (
                         <div key={idx} className="relative">
                           <img
-                            src={URL.createObjectURL(file)}
+                            src={getPreviewSrc(file)}
                             className="h-24 w-full object-cover rounded-lg"
                           />
                           <button
@@ -323,17 +405,11 @@ const NuevoProducto = () => {
                     Inventario
                   </label>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex w-max gap-3">
                     <input
                       type="number"
                       {...register("stock")}
                       placeholder="Stock"
-                      className="w-full px-3 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-700"
-                    />
-
-                    <input
-                      {...register("sku")}
-                      placeholder="SKU"
                       className="w-full px-3 py-2 rounded-lg bg-zinc-800 text-white border border-zinc-700"
                     />
                   </div>
@@ -342,7 +418,7 @@ const NuevoProducto = () => {
                 <hr className="border-zinc-800" />
 
                 {/* PRECIOS */}
-                <dispatchEvent className="space-y-3">
+                <div className="space-y-3">
                   <label className="text-xs font-medium text-zinc-400 block">
                     Precios
                   </label>
@@ -378,7 +454,7 @@ const NuevoProducto = () => {
                       Precio final con {descuentoManual}% de descuento
                     </p>
                   )}
-                </dispatchEvent>
+                </div>
 
                 <hr className="border-zinc-800" />
 
@@ -469,7 +545,7 @@ const NuevoProducto = () => {
         transition
       "
                 >
-                  Crear producto
+                  {isEdit ? "Guardar cambios" : "Crear producto"}
                 </button>
               </div>
             </div>
@@ -493,7 +569,7 @@ const NuevoProducto = () => {
             <div className="relative bg-zinc-900">
               {imagenes[0] ? (
                 <img
-                  src={URL.createObjectURL(imagenes[0])}
+                  src={getPreviewSrc(imagenes[0])}
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -584,4 +660,4 @@ const NuevoProducto = () => {
   );
 };
 
-export default NuevoProducto;
+export default ProductoNuevo;

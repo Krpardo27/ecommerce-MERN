@@ -6,12 +6,7 @@ import { useToast } from "../hooks/useToast";
 import api from "../config/axios";
 
 const RegisterView = () => {
-  const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    password_confirmation: "",
-  };
+  const { showToast } = useToast();
 
   const {
     register,
@@ -20,36 +15,40 @@ const RegisterView = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    defaultValues: initialValues,
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      password_confirmation: "",
+      isAdmin: false,
+    },
   });
-
-  const { showToast } = useToast();
 
   const password = watch("password");
 
   const handleRegister = async (formData) => {
     try {
-      const { data } = await api.post("/auth/register", formData);
+      const endpoint = formData.isAdmin
+        ? "/auth/register-admin"
+        : "/auth/register";
+
+      await api.post(endpoint, formData);
 
       showToast({
         title: "Registro exitoso",
-        description: "Tu cuenta ha sido creada correctamente.",
+        description: "Cuenta creada correctamente",
         type: "success",
         autoNavigateTo: "/auth/login",
       });
+
       reset();
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         showToast({
           title: "Error al registrar",
-          description:
-            "Ocurrió un error inesperado. Por favor, intenta nuevamente.",
-          action: "go-to-register",
+          description: error.response.data?.error || "Error inesperado",
           type: "error",
         });
-        console.error("Axios error:", error.response?.data);
-      } else {
-        console.error("Unexpected error:", error);
       }
     }
   };

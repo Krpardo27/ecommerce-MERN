@@ -24,38 +24,30 @@ export const createAccount = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  // Manejo de errores
-  let errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { email, password } = req.body;
 
-  // Verifica si el usuario existe o si está registrado
-  const user = await Usuario.findOne({ email });
-  if (!user) {
-    const error = new Error("El usuario no existe");
-    return res.status(404).json({ error: error.message });
-  }
+  const emailClean = email.trim().toLowerCase();
 
-  // Verificar la contraseña
-  const isPasswordCorrect = await checkPassword(password, user.password);
+  const user = await Usuario.findOne({ email: emailClean });
 
-  if (!isPasswordCorrect) {
-    const error = new Error("La contraseña es incorrecta");
-    return res.status(401).json({ error: error.message });
-  }
+  if (!user) return res.status(404).json({ error: "El usuario no existe" });
+
+  if (!user.activo) return res.status(403).json({ error: "Usuario inactivo" });
+
+  const ok = await checkPassword(password, user.password);
+
+  if (!ok) return res.status(401).json({ error: "Password incorrecta" });
 
   const token = generateJWT({
     userId: user._id.toString(),
     name: user.name,
     email: user.email,
+    role: user.role,
   });
 
-  res.send(token);
+  res.json({ token });
 };
 
 export const getUser = async (req, res) => {
-  res.json(req.user);
+  res.json({ user: req.user });
 };

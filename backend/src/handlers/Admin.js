@@ -4,9 +4,6 @@ import formidable from "formidable";
 import { v4 as uuidv4 } from "uuid";
 import slugify from "slugify";
 import fs from "fs";
-import Admin from "../models/Admin.js";
-import { checkPassword } from "../utils/auth.js";
-import { generateJWT } from "../utils/jwt.js";
 
 export const addProduct = async (req, res) => {
   try {
@@ -89,68 +86,5 @@ export const addProduct = async (req, res) => {
   } catch (error) {
     console.error("❌ addProduct error:", error);
     return res.status(500).json({ message: "Error al crear el producto" });
-  }
-};
-
-export const adminLogin = async (req, res) => {
-  console.log("🔥 ADMIN LOGIN BODY:", req.body);
-
-  const { email, password } = req.body;
-
-  const admin = await Admin.findOne({ email });
-
-  if (!admin || !admin.activo) {
-    return res.status(401).json({
-      message: "Credenciales inválidas",
-    });
-  }
-
-  const isValid = await checkPassword(password, admin.password);
-
-  if (!isValid) {
-    return res.status(401).json({
-      message: "Credenciales inválidas",
-    });
-  }
-
-  const token = generateJWT({
-    adminId: admin._id.toString(),
-    role: "admin",
-  });
-
-  res.json({
-    token,
-    admin: {
-      id: admin._id,
-      name: admin.name,
-      email: admin.email,
-    },
-  });
-};
-
-export const adminProfile = async (req, res) => {
-  try {
-    const { adminId } = req.admin;
-
-    const admin = await Admin.findById(adminId).select("_id name email activo");
-
-    if (!admin || !admin.activo) {
-      return res.status(401).json({
-        message: "Administrador no válido",
-      });
-    }
-
-    return res.json({
-      admin: {
-        id: admin._id,
-        name: admin.name,
-        email: admin.email,
-      },
-    });
-  } catch (error) {
-    console.error("❌ Error en adminProfile:", error);
-    return res.status(500).json({
-      message: "Error al obtener perfil del administrador",
-    });
   }
 };

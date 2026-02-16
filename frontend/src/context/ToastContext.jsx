@@ -1,6 +1,5 @@
 import * as Toast from "@radix-ui/react-toast";
 import { createContext, useState, useCallback, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 export const ToastContext = createContext(null);
 
@@ -15,8 +14,6 @@ export const ToastProvider = ({ children }) => {
     type: "info",
     autoNavigateTo: null,
   });
-
-  const navigate = useNavigate();
 
   const showToast = useCallback(
     ({ title, description = "", type = "info", autoNavigateTo = null }) => {
@@ -37,12 +34,10 @@ export const ToastProvider = ({ children }) => {
     if (type !== "success") return;
     if (!autoNavigateTo) return;
 
-    const timer = setTimeout(() => {
-      navigate(autoNavigateTo);
-    }, AUTO_NAV_DELAY);
+    const timer = setTimeout(() => {}, AUTO_NAV_DELAY);
 
     return () => clearTimeout(timer);
-  }, [open, type, autoNavigateTo, navigate]);
+  }, [open, type, autoNavigateTo]);
 
   const variantStyles = {
     success: "border-lime-500/40 text-lime-400",
