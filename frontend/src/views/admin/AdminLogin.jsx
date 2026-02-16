@@ -1,14 +1,17 @@
 import { useForm } from "react-hook-form";
-
 import { isAxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+
 import ErrorMessage from "../../components/ErrorMessage";
+import FullscreenLoader from "../../components/FullscreenLoader";
 import { useToast } from "../../hooks/useToast";
 import api from "../../config/axios";
-import { useState } from "react";
-import FullscreenLoader from "../../components/FullscreenLoader";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AdminLogin = () => {
+  const queryClient = useQueryClient();
+
   const {
     register,
     handleSubmit,
@@ -18,30 +21,47 @@ const AdminLogin = () => {
   });
 
   const [loggingIn, setLoggingIn] = useState(false);
-
   const navigate = useNavigate();
   const { showToast } = useToast();
 
-  const MIN_LOADING_TIME = 2500;
+  const MIN_LOADING_TIME = 1200;
 
   const handleLogin = async (formData) => {
     setLoggingIn(true);
 
     try {
-      const { data } = await api.post("/admin/login", formData);
+      const { data } = await api.post("/auth/login", formData);
 
-      localStorage.setItem("ADMIN_TOKEN", data.token);
+      const token = data.token;
+      if (!token) throw new Error("Token no recibido");
+
+      localStorage.setItem("AUTH_TOKEN", token);
+
+      const me = await api.get("/auth/me");
+      console.log("ME RESPONSE:", me.data);
+
+      if (me.data.user.role !== "admin") {
+        localStorage.removeItem("AUTH_TOKEN");
+
+        showToast({
+          title: "Acceso denegado",
+          description: "Tu cuenta no tiene permisos de administrador",
+          type: "error",
+        });
+
+        setLoggingIn(false);
+        return;
+      }
 
       showToast({
         title: "Acceso administrador",
-        description: "Bienvenido al panel de administración",
+        description: "Bienvenido al panel",
         type: "success",
       });
 
-      // ⏱️ tiempo mínimo de loader
-      setTimeout(() => {
-        navigate("/admin/dashboard", { replace: true });
-      }, MIN_LOADING_TIME);
+      await queryClient.invalidateQueries(["auth", "me"]);
+      sessionStorage.setItem("ADMIN_JUST_LOGGED_IN", "1");
+      navigate("/admin/dashboard", { replace: true });
     } catch (error) {
       setLoggingIn(false);
 
@@ -49,13 +69,15 @@ const AdminLogin = () => {
         showToast({
           title: "Error de acceso",
           description:
-            error.response?.data?.message || "Credenciales inválidas",
+            error.response?.data?.error ||
+            error.response?.data?.message ||
+            "Credenciales inválidas",
           type: "error",
         });
       } else {
         showToast({
           title: "Error",
-          description: "Ocurrió un error inesperado",
+          description: error.message || "Ocurrió un error inesperado",
           type: "error",
         });
       }
@@ -65,12 +87,11 @@ const AdminLogin = () => {
   return (
     <>
       <FullscreenLoader isVisible={loggingIn} label="Iniciando sesión…" />
-      <div className="relative flex justify-center">
-        <div className="pointer-events-none absolute inset-0 " />
 
+      <div className="relative flex justify-center">
         <div className="relative w-full max-w-md rounded-3xl border border-zinc-800/60 bg-zinc-950/90 p-8 shadow-2xl backdrop-blur">
           <header className="mb-8 text-center space-y-2">
-            <h1 className="text-3xl font-semibold tracking-tight text-white">
+            <h1 className="text-3xl font-semibold text-white">
               Acceso administrador
             </h1>
             <p className="text-sm text-zinc-400">
@@ -78,35 +99,14 @@ const AdminLogin = () => {
             </p>
           </header>
 
-          {/* Form */}
           <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
             {/* Email */}
-            <div className="space-y-1">
-              <label
-                htmlFor="email"
-                className="text-xs font-medium uppercase tracking-wide text-zinc-400"
-              >
-                Email
-              </label>
+            <div>
+              <label className="text-xs e">Email</label>
               <input
-                id="email"
                 type="email"
-                {...register("email", {
-                  required: "El email es obligatorio",
-                  pattern: {
-                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                    message: "Email inválido",
-                  },
-                })}
-                className="
-              w-full rounded-xl px-4 py-3 mt-2
-              bg-zinc-900 border border-zinc-800
-              text-zinc-100 placeholder-zinc-500
-              focus:outline-none focus:ring-2 focus:ring-emerald-500/60
-              focus:border-emerald-500
-              transition
-            "
-                placeholder="admin@tudominio.cl"
+                {...register("email", { required: "Email obligatorio" })}
+                className="w-full mt-2 p-3 rounded-xl bg-zinc-900 border text-slate-300"
               />
               {errors.email && (
                 <ErrorMessage>{errors.email.message}</ErrorMessage>
@@ -114,53 +114,26 @@ const AdminLogin = () => {
             </div>
 
             {/* Password */}
-            <div className="space-y-1">
-              <label
-                htmlFor="password"
-                className="text-xs font-medium uppercase tracking-wide text-zinc-400"
-              >
-                Contraseña
-              </label>
+            <div>
+              <label className="text-xs text-zinc-400">Contraseña</label>
               <input
-                id="password"
                 type="password"
-                {...register("password", {
-                  required: "La contraseña es obligatoria",
-                })}
-                className="
-              w-full rounded-xl px-4 py-3 mt-2
-              bg-zinc-900 border border-zinc-800
-              text-zinc-100 placeholder-zinc-500
-              focus:outline-none focus:ring-2 focus:ring-emerald-500/60
-              focus:border-emerald-500
-              transition
-            "
-                placeholder="••••••••"
+                {...register("password", { required: "Password obligatorio" })}
+                className="w-full mt-2 p-3 rounded-xl bg-zinc-900 border text-slate-300"
               />
               {errors.password && (
                 <ErrorMessage>{errors.password.message}</ErrorMessage>
               )}
             </div>
 
-            {/* CTA */}
             <button
-              type="submit"
               disabled={loggingIn}
-              className="
-            mt-6 w-full rounded-xl py-3
-            bg-emerald-500 text-zinc-950
-            font-semibold
-            hover:bg-emerald-400
-            active:scale-[0.98]
-            transition
-            disabled:opacity-50
-          "
+              className="w-full py-3 rounded-xl bg-emerald-500 font-semibold text-zinc-950 hover:bg-emerald-400"
             >
               {loggingIn ? "Ingresando…" : "Ingresar al panel"}
             </button>
           </form>
 
-          {/* Footer */}
           <div className="mt-6 text-center text-xs text-zinc-500">
             Acceso restringido · Solo personal autorizado
           </div>

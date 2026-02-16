@@ -3,31 +3,27 @@ import Usuario from "../models/Usuario.js";
 
 export const authenticate = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization;
-    console.log("AUTH HEADER BACKEND:", authHeader);
+    const authHeader = req.headers.authorization || "";
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Token no proporcionado" });
+    if (!authHeader.toLowerCase().startsWith("bearer ")) {
+      return res.status(401).json({ message: "Token requerido" });
     }
 
     const token = authHeader.split(" ")[1];
 
-    if (!token || token === "undefined") {
-      return res.status(401).json({ message: "Token inválido" });
-    }
-
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    const user = await Usuario.findById(decoded.userId).lean();
+    const user = await Usuario.findById(decoded.userId)
+      .select("_id name email role activo")
+      .lean();
 
-    if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+    if (!user || !user.activo) {
+      return res.status(401).json({ message: "Usuario no válido" });
     }
 
     req.user = user;
     next();
   } catch (error) {
-    console.error("❌ Auth error:", error);
     return res.status(401).json({ message: "Token inválido" });
   }
 };

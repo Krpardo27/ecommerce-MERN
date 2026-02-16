@@ -1,12 +1,12 @@
 import React, { useMemo } from "react";
 import { FiBox, FiGrid, FiHome, FiX } from "react-icons/fi";
 import { useLocation, NavLink } from "react-router-dom";
-import { useAdminProfile } from "../../hooks/queries/useAdminProfile";
+import { useMe } from "../../hooks/queries/useMe";
 
 const cn = (...classes) => classes.filter(Boolean).join(" ");
 
 const SidebarAdmin = ({ isOpen, onClose }) => {
-  const { data: admin, isLoading, isError } = useAdminProfile();
+  const { data: admin, isLoading, isError } = useMe();
 
   const location = useLocation();
 
@@ -21,7 +21,6 @@ const SidebarAdmin = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Overlay mobile */}
       <div
         className={cn(
           "fixed inset-0 z-40 bg-black/60 backdrop-blur-sm lg:hidden",

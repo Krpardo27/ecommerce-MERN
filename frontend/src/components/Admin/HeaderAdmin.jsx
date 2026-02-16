@@ -1,22 +1,24 @@
 import { useState } from "react";
-import { FiBox, FiLogOut, FiMenu, FiSearch } from "react-icons/fi";
+import { FiBox, FiExternalLink, FiLogOut, FiMenu, FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import FullscreenLoader from "../FullscreenLoader";
-import { useToast } from "../../hooks/useToast";
 
-const MIN_LOADING_TIME = 2500; // Tiempo mínimo de carga en ms
+const MIN_LOADING_TIME = 2500; 
 
 const HeaderAdmin = ({ onOpenSidebar }) => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [loggingOut, setLoggingOut] = useState(false);
 
+  const PUBLIC_URL = import.meta.env.VITE_PUBLIC_URL || "/";
+
   const handleLogout = () => {
     setLoggingOut(true);
 
-    localStorage.removeItem("ADMIN_TOKEN");
-    queryClient.removeQueries({ queryKey: ["admin"] });
+    localStorage.removeItem("AUTH_TOKEN");
+
+    queryClient.clear();
 
     setTimeout(() => {
       navigate("/admin/login", { replace: true });
@@ -39,6 +41,7 @@ const HeaderAdmin = ({ onOpenSidebar }) => {
           </button>
 
           <div className="flex-1 flex items-center gap-3">
+            {/* SEARCH */}
             <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-xl border border-zinc-800 bg-zinc-950">
               <FiSearch className="text-zinc-400" />
               <input
@@ -48,6 +51,18 @@ const HeaderAdmin = ({ onOpenSidebar }) => {
             </div>
 
             <div className="ml-auto flex items-center gap-2">
+              {/* IR A LA WEB */}
+              <a
+                href={PUBLIC_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-indigo-500/40 text-indigo-300 hover:bg-indigo-500/10 hover:text-white transition font-semibold"
+              >
+                <FiExternalLink />
+                <span className="hidden sm:inline">Ir a la web</span>
+              </a>
+
+              {/* NUEVO PRODUCTO */}
               <button
                 type="button"
                 onClick={() => navigate("/admin/productos/crear-producto")}
@@ -57,6 +72,7 @@ const HeaderAdmin = ({ onOpenSidebar }) => {
                 Nuevo producto
               </button>
 
+              {/* LOGOUT */}
               <button
                 type="button"
                 onClick={handleLogout}

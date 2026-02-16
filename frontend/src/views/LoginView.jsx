@@ -23,33 +23,30 @@ const LoginView = () => {
 
   const handleLogin = async (formData) => {
     try {
-      const { data: token } = await api.post("/auth/login", formData);
+      const { data } = await api.post("/auth/login", formData);
 
-      localStorage.setItem("AUTH_TOKEN", token);
+      localStorage.setItem("ADMIN_TOKEN", data.token);
 
-      showToast({
-        title: "Inicio de sesión exitoso",
-        description: "Has iniciado sesión correctamente.",
-        type: "success",
-      });
+      // Decodificar token para ver role
+      const payload = JSON.parse(atob(data.token.split(".")[1]));
 
-      navigate("/auth/profile", { replace: true });
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        const backendMessage =
-          error.response.data?.error ||
-          error.response.data?.message ||
-          "Ocurrió un error inesperado. Por favor, intenta nuevamente.";
-
+      if (payload.role !== "admin") {
         showToast({
-          title: "Error al iniciar sesión",
-          description: backendMessage,
+          title: "Acceso denegado",
+          description: "No tienes permisos de administrador",
           type: "error",
         });
+        return;
+      }
 
-        console.error("Axios error:", error.response.data);
-      } else {
-        console.error("Unexpected error:", error);
+      navigate("/admin/dashboard", { replace: true });
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        showToast({
+          title: "Error login",
+          description: error.response.data?.error || "Error inesperado",
+          type: "error",
+        });
       }
     }
   };

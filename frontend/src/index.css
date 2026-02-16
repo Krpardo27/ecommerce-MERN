@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* @layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+    background: #020617; 
+    color-scheme: dark;
+  }
+} */
+
 @keyframes slideIn {
   from {
     transform: translateX(120%);
