@@ -17,6 +17,11 @@ import categoriesRoutes from "./routes/CategoriasRoutes.js";
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, res, next) => {
+  console.log("ORIGIN:", req.headers.origin);
+  next();
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/productos", productRoutes);
@@ -28,6 +33,7 @@ app.use((err, req, res, next) => {
     message: err.message || "Error interno",
   });
 });
+
 
 
 export default app;

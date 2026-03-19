@@ -1,16 +1,15 @@
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://ecommerce-mern-theta-six.vercel.app",
+];
 
 export const corsConfig = {
   origin: function (origin, callback) {
-    const whitelist = [process.env.FRONTEND_URL];
-
-    if (process.argv[2] === "--api") {
-      whitelist.push(undefined);
-    }
-
-    if (whitelist.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("No permitido por CORS"));
+      callback(new Error("CORS no permitido"));
     }
   },
+  credentials: true,
 };
