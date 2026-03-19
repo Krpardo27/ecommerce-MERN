@@ -8,7 +8,6 @@ import { useMe } from "../hooks/queries/useMe";
 const AdminPanelLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  /* ===== Detectar login reciente ===== */
   const justLoggedIn = useMemo(
     () => sessionStorage.getItem("ADMIN_JUST_LOGGED_IN") === "1",
     [],
@@ -16,7 +15,6 @@ const AdminPanelLayout = () => {
 
   const [showLoginLoader, setShowLoginLoader] = useState(justLoggedIn);
 
-  /* ===== Auth check ===== */
   const { isFetching } = useMe();
 
   useEffect(() => {
@@ -39,13 +37,10 @@ const AdminPanelLayout = () => {
       />
 
       <div className="min-h-screen flex bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 text-zinc-100">
-        {/* SIDEBAR */}
         <SidebarAdmin
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
         />
-
-        {/* MAIN */}
         <div className="flex flex-1 flex-col min-w-0">
           <HeaderAdmin onOpenSidebar={() => setSidebarOpen(true)} />
 

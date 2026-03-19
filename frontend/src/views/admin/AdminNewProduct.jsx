@@ -12,7 +12,7 @@ import { useProducto } from "../../hooks/queries/useProducto";
 import { useUpdateProduct } from "../../hooks/mutations/useUpdateProduct";
 import getPreviewSrc from "../../utils/getPreviewSrc";
 
-const ProductoNuevo = ({ initialData, isEdit = false }) => {
+const AdminNewProduct = ({ initialData, isEdit = false }) => {
   const navigate = useNavigate();
   const addProduct = useAddProduct();
 
@@ -660,4 +660,4 @@ const ProductoNuevo = ({ initialData, isEdit = false }) => {
   );
 };
 
-export default ProductoNuevo;
+export default AdminNewProduct;

@@ -9,17 +9,21 @@ import { getOptimizedImage } from "../utils/image";
 
 const ProductCard = ({ producto }) => {
   const { nombre, precio, imagenes, categoria, slug } = producto;
+  console.log('imagenes', imagenes);
+  
   const [added, setAdded] = useState(false);
 
   const { addToCart } = useCartContext();
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
-  // ⚡ Prefetch detalle producto
   const prefetchProducto = () => {
+    if (queryClient.getQueryData(["producto", slug])) return;
+
     queryClient.prefetchQuery({
       queryKey: ["producto", slug],
       queryFn: () => fetchProductoBySlug(slug),
+      staleTime: 1000 * 60 * 5,
     });
   };
 
@@ -46,8 +50,19 @@ const ProductCard = ({ producto }) => {
         to={`/producto/${slug}`}
         className="block relative h-52 overflow-hidden"
       >
+        <div className="absolute top-3 left-3 bg-zinc-950/80 text-[10px] uppercase px-2 py-1 rounded text-zinc-300">
+          {categoria?.nombre}
+        </div>
         <img
           src={getOptimizedImage(imagenes?.[0], 600)}
+          srcSet={`
+    ${getOptimizedImage(imagenes?.[0], 320)} 320w,
+    ${getOptimizedImage(imagenes?.[0], 600)} 600w,
+    ${getOptimizedImage(imagenes?.[0], 900)} 900w
+  `}
+          sizes="(max-width:640px) 100vw,
+         (max-width:1024px) 50vw,
+         25vw"
           alt={nombre}
           loading="lazy"
           decoding="async"

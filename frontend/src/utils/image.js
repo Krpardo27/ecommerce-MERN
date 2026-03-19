@@ -1,11 +1,11 @@
-export const getOptimizedImage = (url, width = 600) => {
-  if (!url) return "";
+const CLOUD_NAME = "dy651pevq";
 
-  // Pexels / Unsplash / similares
-  if (url.includes("pexels.com") || url.includes("unsplash.com")) {
-    return `${url}?auto=compress&cs=tinysrgb&w=${width}`;
+export const getOptimizedImage = (src, width = 600) => {
+  if (!src) return "";
+
+  if (src.startsWith("http")) {
+    return src;
   }
 
-  // Fallback (local o futura CDN)
-  return url;
+  return `https://res.cloudinary.com/${CLOUD_NAME}/image/upload/f_auto,q_auto,w_${width}/${src}`;
 };

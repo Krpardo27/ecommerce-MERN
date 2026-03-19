@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useProducto } from "../../hooks/queries/useProducto.js";
-import ProductoNuevo from "../../views/admin/ProductoNuevo.jsx";
+import AdminNewProduct from "../../views/admin/AdminNewProduct.jsx";
 import FullscreenLoader from "../../components/FullscreenLoader";
 
 const ProductoEditar = () => {
@@ -13,7 +13,7 @@ const ProductoEditar = () => {
   if (isError || !data)
     return <p className="text-red-400">Producto no encontrado</p>;
 
-  return <ProductoNuevo initialData={data} isEdit />;
+  return <AdminNewProduct initialData={data} isEdit />;
 };
 
 export default ProductoEditar;
