@@ -18,9 +18,12 @@ const ProductView = () => {
   const [params, setParams] = useSearchParams();
 
   const categoria = params.get("categoria");
+  const subcategoria = params.get("subcategoria");
   const search = params.get("search") || "";
+  
   const page = Number(params.get("page") || 1);
-  const limit = params.get("limit") || 12;
+  const limitParam = params.get("limit") || "12";
+  const limit = limitParam === "all" ? "all" : Number(limitParam);
 
   const productosFiltrados = useMemo(() => {
     if (!Array.isArray(productos)) return [];
@@ -32,11 +35,15 @@ const ProductView = () => {
         ? true
         : p?.categoria?.slug === categoria;
 
+      const matchSubcategoria = !subcategoria
+        ? true
+        : p?.subcategoria?.slug === subcategoria;
+
       const matchSearch = q ? p?.nombre?.toLowerCase().includes(q) : true;
 
-      return matchCategoria && matchSearch;
+      return matchCategoria && matchSubcategoria && matchSearch;
     });
-  }, [productos, categoria, search]);
+  }, [productos, categoria, subcategoria, search]);
 
   const itemsPerPage =
     limit === "all" ? productosFiltrados.length : Number(limit);
@@ -46,10 +53,14 @@ const ProductView = () => {
   const productosVisibles = useMemo(() => {
     if (!Array.isArray(productosFiltrados)) return [];
 
-    return limit === "all"
-      ? productosFiltrados
-      : productosFiltrados.slice(0, limit);
-  }, [productosFiltrados, limit]);
+    if (limit === "all") return productosFiltrados;
+
+    const perPage = Number(limit);
+    const start = (page - 1) * perPage;
+    const end = start + perPage;
+
+    return productosFiltrados.slice(start, end);
+  }, [productosFiltrados, page, limit]);
 
   const updateParams = (newParams) => {
     setParams((prev) => {
@@ -70,7 +81,17 @@ const ProductView = () => {
     <div className="flex bg-zinc-950 min-h-screen">
       <Sidebar
         categoriaActiva={categoria}
-        onChangeCategoria={(slug) => updateParams({ categoria: slug, page: 1 })}
+        subcategoriaActiva={subcategoria}
+        onChangeCategoria={(slug) =>
+          updateParams({
+            categoria: slug,
+            subcategoria: null,
+            page: 1,
+          })
+        }
+        onChangeSubcategoria={(slug) =>
+          updateParams({ subcategoria: slug, page: 1 })
+        }
       />
       <main className="flex-1 p-6 space-y-8">
         <ProductsControls
@@ -84,8 +105,16 @@ const ProductView = () => {
         <div className="md:hidden">
           <SidebarMobile
             categoriaActiva={categoria}
+            subcategoriaActiva={subcategoria}
             onChangeCategoria={(slug) =>
-              updateParams({ categoria: slug, page: 1 })
+              updateParams({
+                categoria: slug,
+                subcategoria: null,
+                page: 1,
+              })
+            }
+            onChangeSubcategoria={(slug) =>
+              updateParams({ subcategoria: slug, page: 1 })
             }
           />
         </div>

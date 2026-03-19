@@ -14,6 +14,12 @@ import AdminDashboard from "./views/admin/AdminDashboard";
 import AdminPanelLayout from "./layouts/AdminPanelLayout";
 import EcommerceLayout from "./layouts/EcommerceLayout";
 import AuthLayout from "./layouts/AuthLayout";
+import AdminLogin from "./views/admin/AdminLogin";
+import AdminProtectedRoute from "./layouts/AdminProtectedRoute";
+import AdminAuthLayout from "./layouts/AdminAuthLayout";
+import AdminNewProduct from "./views/admin/AdminNewProduct";
+import AdminProductos from "./views/admin/AdminProductos";
+import CategoriasAdmin from "./views/admin/CategoriasAdmin";
 
 export const router = createBrowserRouter([
   {
@@ -40,8 +46,36 @@ export const router = createBrowserRouter([
 
   {
     path: "admin",
-    element: <AdminPanelLayout />,
-    children: [{ path: "dashboard", element: <AdminDashboard /> }],
+    children: [
+      {
+        element: <AdminAuthLayout />,
+        children: [{ path: "login", element: <AdminLogin /> }],
+      },
+
+      {
+        element: <AdminProtectedRoute />,
+        children: [
+          {
+            element: <AdminPanelLayout />,
+            children: [
+              { path: "dashboard", element: <AdminDashboard /> },
+              { path: "productos", element: <AdminProductos /> },
+              {
+                path: "productos/crear-producto",
+                element: <AdminNewProduct />,
+              },
+              {
+                path: "productos/editar-producto/:id",
+                element: <AdminNewProduct isEdit />,
+              },
+              { path: "categorias", element: <CategoriasAdmin /> },
+            ],
+          },
+        ],
+      },
+
+      { index: true, element: <Navigate to="/admin/login" replace /> },
+    ],
   },
 
   {

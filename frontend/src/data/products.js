@@ -38,13 +38,12 @@ export const products = [
 
   // ───────────── COMPONENTES PC ─────────────
   {
-    nombre: "CORSAIR Vengeance DDR5 16 GB (2x8GB) 5200 MHz",
+    nombre: "CORSAIR Vengeance DDR5 16 GB (2x8GB)",
     slug: "ram-ddr5-2x8gb-5200mhz",
     precio: 284990,
-    descripcion:
-      "La memoria Crucial de 32 GB DDR5 Pro Series: Overclocked Edition (CP2K16G60C36U5B) lleva el rendimiento de los juegos al siguiente nivel con velocidades asombrosas y ancho de banda masivo. Este kit de memoria RAM DDR5 de overclocking (2x16GB) está diseñado con disipadores de calor de aluminio de última generación para disipar el calor de manera efectiva. Inspirados en el arte de Origami, estos difusores de calor cumplen una doble función de lucir lúdico y único mientras mantienen tu sistema más fresco durante los juegos AAA de ritmo rápido o intensivos en memoria. El rendimiento aumenta un nivel con tiempos extendidos de 36-38-38-80, lo que garantiza un rendimiento de overclocking estable y una latencia más baja del 25% en comparación con los módulos DRAM Plug-and-Play de la serie Crucial Pro.",
     categoriaKey: "componentes-pc",
-    imagenes: ["../ram/corsair/CORSAIR-Vengeance-DDR5-16GB-(2x8GB).jpg"],
+    subcategoriaKey: "memorias-ram",
+    imagenes: ["productos/memorias-ram/nkbh3dcntdt2j5hob9qi"],
     activo: true,
   },
   {
@@ -54,7 +53,8 @@ export const products = [
     descripcion:
       "CORSAIR La memoria DDR5 RGB VENGEANCE ofrece rendimiento DDR5, frecuencias más altas y mayores capacidades optimizadas para placas base Intel mientras ilumina su PC con iluminación RGB de diez zonas dinámica y direccionable individualmente. Los chips de memoria de alta frecuencia estrechamente protegidos permiten un procesamiento, renderizado y almacenamiento en búfer más rápidos que nunca, con regulación de voltaje integrada para un overclocking fácil y finamente controlado. Tome el control con el software CORSAIR iCUE y habilite la personalización de iluminación RGB, monitoreo de frecuencia en tiempo real, regulación de voltaje integrada y personalización de perfiles Intel XMP 3.0. Una PCB personalizada proporciona una excelente calidad de señal para un alto rendimiento y estabilidad en las últimas placas base Intel DDR5. Para un rendimiento DDR5 de vanguardia con iluminación RGB fascinante, VENGEANCE RGB DDR5 ilumina el camino.",
     categoriaKey: "componentes-pc",
-    imagenes: ["../ram/corsair/CORSAIR-Vengeance-RGB-DDR5-RAM-16GB.jpg"],
+    subcategoriaKey: "memorias-ram",
+    imagenes: ["productos/memorias-ram/qu4njzaibpuky0wwrkh0"],
     activo: true,
   },
   {
@@ -64,7 +64,8 @@ export const products = [
     descripcion:
       "La memoria Crucial de 32 GB DDR5 Pro Series: Overclocked Edition (CP2K16G60C36U5B) lleva el rendimiento de los juegos al siguiente nivel con velocidades asombrosas y ancho de banda masivo. Este kit de memoria RAM DDR5 de overclocking (2x16GB) está diseñado con disipadores de calor de aluminio de última generación para disipar el calor de manera efectiva. Inspirados en el arte de Origami, estos difusores de calor cumplen una doble función de lucir lúdico y único mientras mantienen tu sistema más fresco durante los juegos AAA de ritmo rápido o intensivos en memoria. El rendimiento aumenta un nivel con tiempos extendidos de 36-38-38-80, lo que garantiza un rendimiento de overclocking estable y una latencia más baja del 25% en comparación con los módulos DRAM Plug-and-Play de la serie Crucial Pro.",
     categoriaKey: "componentes-pc",
-    imagenes: ["../ram/crucial/crucial-memoria-ram-ddr5-32gb.jpg"],
+    subcategoriaKey: "memorias-ram",
+    imagenes: ["productos/memorias-ram/l18097nunj0oinwc0hqs"],
     activo: true,
   },
   {
@@ -73,9 +74,8 @@ export const products = [
     precio: 119990,
     descripcion: "Unidad SSD NVMe Gen4 con velocidades ultra rápidas.",
     categoriaKey: "componentes-pc",
-    imagenes: [
-      "https://images.pexels.com/photos/270360/pexels-photo-270360.jpeg",
-    ],
+    subcategoriaKey: "almacenamiento",
+    imagenes: ["productos/almacenamiento/ssd-nvme-gen4-1tb"],
     activo: true,
   },
   {
@@ -108,9 +108,7 @@ export const products = [
     descripcion:
       "Sumérgete en el sonido de los deportes con los BlackShark V2 X de Razer; te ofrecen un audio increíble, un micrófono de claridad superior y un aislamiento acústico supremo. Este conjunto incluye nuestro mejor micrófono para auriculares y nuestros mejores controladores de sonido en unos auriculares de estilo de aviación únicos; con ellos tu juego de competición está destinado a convertirse en pro.",
     categoriaKey: "audio-gamer",
-    imagenes: [
-      "../razer/audio/razer-blackshark-v2-x.jpg",
-    ],
+    imagenes: ["../razer/audio/razer-blackshark-v2-x.jpg"],
     activo: true,
   },
 

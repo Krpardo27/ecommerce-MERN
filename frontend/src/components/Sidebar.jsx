@@ -16,7 +16,13 @@ const iconBySlug = {
   "sillas-gamer": FiBox,
 };
 
-const SidebarContent = ({ categorias, categoriaActiva, onChangeCategoria }) => {
+const SidebarContent = ({
+  categorias,
+  categoriaActiva,
+  subcategoriaActiva,
+  onChangeCategoria,
+  onChangeSubcategoria,
+}) => {
   return (
     <>
       <h2 className="text-xs font-semibold uppercase tracking-widest text-zinc-500 mb-6">
@@ -24,6 +30,7 @@ const SidebarContent = ({ categorias, categoriaActiva, onChangeCategoria }) => {
       </h2>
 
       <ul className="space-y-1">
+        {/* TODAS */}
         <li>
           <button
             onClick={() => onChangeCategoria(null)}
@@ -40,13 +47,15 @@ const SidebarContent = ({ categorias, categoriaActiva, onChangeCategoria }) => {
 
         {categorias.map((c) => {
           const Icon = iconBySlug[c.key] || FiBox;
+          const active = categoriaActiva === c.slug;
 
           return (
             <li key={c.key}>
+              {/* CATEGORIA */}
               <button
-                onClick={() => onChangeCategoria(c.key)}
+                onClick={() => onChangeCategoria(c.slug)}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${
-                  categoriaActiva === c.key
+                  active
                     ? "bg-zinc-800 text-lime-400"
                     : "text-zinc-300 hover:bg-zinc-900"
                 }`}
@@ -54,27 +63,48 @@ const SidebarContent = ({ categorias, categoriaActiva, onChangeCategoria }) => {
                 <Icon />
                 {c.nombre}
               </button>
+
+              {/* SUBCATEGORIAS */}
+              {active && c.subcategorias?.length > 0 && (
+                <ul className="ml-7 mt-2 space-y-1 border-l border-zinc-800 pl-3">
+                  {c.subcategorias.map((sub) => (
+                    <li key={sub.key}>
+                      <button
+                        onClick={() => onChangeSubcategoria(sub.slug)}
+                        className={`w-full text-left text-sm px-2 py-1 rounded transition ${
+                          subcategoriaActiva === sub.slug
+                            ? "text-lime-400"
+                            : "text-zinc-400 hover:text-white"
+                        }`}
+                      >
+                        {sub.nombre}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           );
         })}
       </ul>
-
-      <div className="mt-10 pt-6 border-t border-zinc-800">
-        <p className="text-xs text-zinc-500">
-          Urban essentials · curated drops
-        </p>
-      </div>
     </>
   );
 };
 
-const Sidebar = ({ categoriaActiva, onChangeCategoria }) => {
+const Sidebar = ({
+  categoriaActiva,
+  subcategoriaActiva,
+  onChangeCategoria,
+  onChangeSubcategoria,
+}) => {
   return (
     <aside className="hidden md:block w-64 shrink-0 border-r border-zinc-800 bg-zinc-950 p-6 sticky top-16 h-[calc(100vh-4rem)]">
       <SidebarContent
         categorias={categories}
         categoriaActiva={categoriaActiva}
+        subcategoriaActiva={subcategoriaActiva}
         onChangeCategoria={onChangeCategoria}
+        onChangeSubcategoria={onChangeSubcategoria}
       />
     </aside>
   );
