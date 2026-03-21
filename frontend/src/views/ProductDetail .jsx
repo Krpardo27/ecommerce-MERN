@@ -1,13 +1,16 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { fetchProductoBySlug } from "../services/productos.api";
 import { useCartContext } from "../hooks/useCart";
 import Breadcrumbs from "../components/Breadcrumbs";
 import { getOptimizedImage } from "../utils/image";
+import { useEffect } from "react";
 
 const ProductDetail = () => {
-  const { slug } = useParams();
   const { addToCart } = useCartContext();
+
+  const navigate = useNavigate();
+  const { categoria, slug } = useParams();
 
   const {
     data: producto,
@@ -17,6 +20,18 @@ const ProductDetail = () => {
     queryKey: ["producto", slug],
     queryFn: () => fetchProductoBySlug(slug),
   });
+
+  useEffect(() => {
+    if (!producto) return;
+
+    const expected = producto.subcategoriaKey || producto.categoriaKey;
+
+    if (categoria !== expected) {
+      navigate(`/producto/${expected}/${producto.slug}`, {
+        replace: true,
+      });
+    }
+  }, [producto, categoria, navigate]);
 
   if (isLoading) {
     return <div className="p-10 text-zinc-400">Cargando producto…</div>;
@@ -28,7 +43,7 @@ const ProductDetail = () => {
 
   return (
     <section className="max-w-7xl mx-auto px-6 py-10 space-y-8">
-      <Breadcrumbs />
+      {/* <Breadcrumbs /> */}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* GALERÍA */}

@@ -20,6 +20,7 @@ import AdminAuthLayout from "./layouts/AdminAuthLayout";
 import AdminNewProduct from "./views/admin/AdminNewProduct";
 import AdminProductos from "./views/admin/AdminProductos";
 import CategoriasAdmin from "./views/admin/CategoriasAdmin";
+import ProductoEditar from "./components/Admin/ProductoEditar";
 
 export const router = createBrowserRouter([
   {
@@ -29,7 +30,7 @@ export const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "nosotros", element: <Nosotros /> },
       { path: "productos", element: <Products /> },
-      { path: "producto/:slug", element: <ProductDetail /> },
+      { path: "producto/:categoria/:slug", element: <ProductDetail /> },
       { path: "categorias", element: <Categorias /> },
       { path: "blog", element: <Blog /> },
       { path: "contacto", element: <Contacto /> },
@@ -65,8 +66,8 @@ export const router = createBrowserRouter([
                 element: <AdminNewProduct />,
               },
               {
-                path: "productos/editar-producto/:id",
-                element: <AdminNewProduct isEdit />,
+                path: "productos/:id/editar",
+                element: <ProductoEditar isEdit />,
               },
               { path: "categorias", element: <CategoriasAdmin /> },
             ],

@@ -1,11 +1,12 @@
-import React from 'react'
+import React from "react";
+import ProductView from "../components/Products/ProductView";
 
 const Products = () => {
   return (
     <div>
-      PRODUCTOS
+      <ProductView />
     </div>
-  )
-}
+  );
+};
 
-export default Products
+export default Products;
