@@ -49,10 +49,7 @@ export const crearProducto = async (req, res) => {
 };
 
 export const obtenerProductoPorSlug = async (req, res) => {
-  const producto = await Producto.findOne({ slug: req.params.slug }).populate(
-    "categoria",
-    "nombre slug imagen",
-  );
+  const producto = await Producto.findOne({ slug: req.params.slug });
 
   if (!producto) {
     return res.status(404).json({ mensaje: "Producto no encontrado" });

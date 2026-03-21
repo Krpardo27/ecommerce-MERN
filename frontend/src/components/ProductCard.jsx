@@ -6,11 +6,13 @@ import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { fetchProductoBySlug } from "../services/productos.api";
 import { getOptimizedImage } from "../utils/image";
+import { productUrls } from "../utils/productUrls";
+import { getProductMeta } from "../utils/productMeta";
 
 const ProductCard = ({ producto }) => {
-  const { nombre, precio, imagenes, categoria, slug } = producto;
-  console.log('imagenes', imagenes);
-  
+  const { nombre, precio, imagenes, slug } = producto;
+  const { categoriaLabel } = getProductMeta(producto);
+
   const [added, setAdded] = useState(false);
 
   const { addToCart } = useCartContext();
@@ -45,37 +47,35 @@ const ProductCard = ({ producto }) => {
       onMouseEnter={prefetchProducto}
       className="group relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden transition hover:border-lime-400/30"
     >
-      {/* Imagen + Link al detalle */}
       <Link
-        to={`/producto/${slug}`}
+        to={productUrls(producto)}
         className="block relative h-52 overflow-hidden"
       >
         <div className="absolute top-3 left-3 bg-zinc-950/80 text-[10px] uppercase px-2 py-1 rounded text-zinc-300">
-          {categoria?.nombre}
+          {categoriaLabel}
         </div>
+
         <img
           src={getOptimizedImage(imagenes?.[0], 600)}
           srcSet={`
-    ${getOptimizedImage(imagenes?.[0], 320)} 320w,
-    ${getOptimizedImage(imagenes?.[0], 600)} 600w,
-    ${getOptimizedImage(imagenes?.[0], 900)} 900w
-  `}
+            ${getOptimizedImage(imagenes?.[0], 320)} 320w,
+            ${getOptimizedImage(imagenes?.[0], 600)} 600w,
+            ${getOptimizedImage(imagenes?.[0], 900)} 900w
+          `}
           sizes="(max-width:640px) 100vw,
-         (max-width:1024px) 50vw,
-         25vw"
+                 (max-width:1024px) 50vw,
+                 25vw"
           alt={nombre}
           loading="lazy"
           decoding="async"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-110"
         />
 
-        {/* Precio */}
         <div className="absolute top-3 right-3 bg-zinc-950/80 backdrop-blur text-xs font-semibold px-3 py-1 rounded-full text-lime-400">
           ${precio.toLocaleString("es-CL")}
         </div>
       </Link>
 
-      {/* Overlay CTA (solo carrito) */}
       <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end justify-center pb-4">
         <button
           onClick={handleAdd}
@@ -95,17 +95,16 @@ const ProductCard = ({ producto }) => {
         </button>
       </div>
 
-      {/* Info */}
       <div className="p-4 space-y-2">
         <Link
-          to={`/producto/${slug}`}
+          to={productUrls(producto)}
           className="block text-sm font-medium text-zinc-100 line-clamp-2 hover:underline"
         >
           {nombre}
         </Link>
 
         <p className="text-xs uppercase tracking-wide text-zinc-500">
-          {categoria?.nombre}
+          {categoriaLabel}
         </p>
       </div>
     </article>
