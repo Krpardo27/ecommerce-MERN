@@ -1,15 +1,11 @@
-import axios from "axios";
+import api from "../config/axios";
 
 export const fetchProductos = async () => {
-  const { data } = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/api/productos`,
-  );
+  const { data } = await api.get("/productos");
   return data;
 };
 
 export const fetchProductoBySlug = async (slug) => {
-  const { data } = await axios.get(
-    `${import.meta.env.VITE_BACKEND_URL}/productos/slug/${slug}`,
-  );
+  const { data } = await api.get(`/productos/slug/${slug}`);
   return data;
 };
