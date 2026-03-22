@@ -1,5 +1,6 @@
 import { Router } from "express";
 import multer from "multer";
+
 import {
   crearProducto,
   duplicarProducto,
@@ -12,6 +13,7 @@ import {
 
 import { requireAdmin } from "../middleware/requireAdmin.js";
 import { authenticate } from "../middleware/auth.js";
+import { productValidation } from "../validators/producto.validator.js";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -24,14 +26,21 @@ router.get("/slug/:slug", obtenerProductoPorSlug);
 router.get("/:id", obtenerProductoPorId);
 
 /* ================= ADMIN ================= */
-
-router.post("/", authenticate, requireAdmin, crearProducto);
+router.post(
+  "/",
+  authenticate,
+  requireAdmin,
+  upload.array("imagenes"),
+  productValidation,
+  crearProducto,
+);
 
 router.put(
   "/:id",
   authenticate,
   requireAdmin,
   upload.array("imagenes"),
+  productValidation,
   editarProducto,
 );
 
