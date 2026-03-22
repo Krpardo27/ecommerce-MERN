@@ -4,6 +4,7 @@ const productosSchema = new mongoose.Schema(
   {
     nombre: String,
     slug: { type: String, unique: true },
+
     precio: Number,
     precioOferta: Number,
 
@@ -18,6 +19,19 @@ const productosSchema = new mongoose.Schema(
     subcategoriaKey: String,
 
     imagenes: [String],
+
+    shortDescription: String,
+    longDescription: String,
+
+    features: [String],
+
+    specs: [
+      {
+        key: String,
+        value: String,
+      },
+    ],
+
     descripcion: String,
 
     activo: { type: Boolean, default: true },
