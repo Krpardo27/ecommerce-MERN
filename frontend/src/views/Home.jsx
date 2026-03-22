@@ -1,6 +1,5 @@
 import { useProductos } from "../hooks/queries/useProductos";
 import ProductGrid from "../components/ProductGrid";
-import { useEffect } from "react";
 import Hero from "../components/Hero";
 
 const Home = () => {

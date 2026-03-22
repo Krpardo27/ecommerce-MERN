@@ -14,8 +14,8 @@ const Breadcrumbs = () => {
       </Link>
       <span>/</span>
 
-      <Link to="/categorias" className="hover:text-zinc-200">
-        Categorías
+      <Link to="/productos" className="hover:text-zinc-200">
+        Productos
       </Link>
 
       {categoria && (
